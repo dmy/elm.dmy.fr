@@ -97,7 +97,7 @@ viewBinop : Info -> Docs.Binop -> Html msg
 viewBinop info { name, comment, tipe } =
   let
     nameHtml =
-      toBoldLink info ("(" ++ name ++ ")")
+      makeLink info [bold] name ("(" ++ name ++ ")")
   in
   viewCodeBlock name comment <|
     case toLines info Other tipe of
