@@ -14,7 +14,8 @@ import Page.Search as Search
 import Session
 import Skeleton
 import Url
-import Url.Parser as Parser exposing (Parser, (</>), custom, fragment, map, oneOf, s, top)
+import Url.Parser as Parser exposing (Parser, (</>), (<?>), custom, fragment, map, oneOf, s, top)
+import Url.Parser.Query as Query
 
 
 
@@ -138,7 +139,7 @@ update message model =
 
     SearchMsg msg ->
       case model.page of
-        Search search -> stepSearch model (Search.update msg search)
+        Search search -> stepSearch model (Search.update model.key msg search)
         _             -> ( model, Cmd.none )
 
     DiffMsg msg ->
@@ -211,8 +212,9 @@ stepUrl url model =
 
     parser =
       oneOf
-        [ route top
-            ( stepSearch model (Search.init session)
+        [ route (top <?> Query.string "q")
+            (\query ->
+              stepSearch model (Search.init session (Maybe.map (String.replace "+" " ") query))
             )
         , route (s "packages" </> author_ </> project_)
             (\author project ->

@@ -10,6 +10,7 @@ module Page.Search exposing
 import Elm.Version as V
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, class, href, placeholder, style, value)
+import Url
 import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Html.Keyed as Keyed
@@ -21,6 +22,7 @@ import Page.Problem as Problem
 import Session
 import Skeleton
 import Url.Builder as Url
+import Browser.Navigation as Nav
 
 
 
@@ -40,16 +42,16 @@ type Entries
   | Success (List Entry.Entry)
 
 
-init : Session.Data -> ( Model, Cmd Msg )
-init session =
+init : Session.Data -> Maybe String -> ( Model, Cmd Msg )
+init session query =
   case Session.getEntries session of
     Just entries ->
-      ( Model session "" (Success entries)
+      ( Model session (Maybe.withDefault "" query) (Success entries)
       , Cmd.none
       )
 
     Nothing ->
-      ( Model session "" Loading
+      ( Model session (Maybe.withDefault "" query) Loading
       , Http.send GotPackages <|
           Http.get "/search.json" (Decode.list Entry.decoder)
       )
@@ -64,12 +66,17 @@ type Msg
   | GotPackages (Result Http.Error (List Entry.Entry))
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
-update msg model =
+update : Nav.Key -> Msg -> Model -> ( Model, Cmd msg )
+update key msg model =
   case msg of
     QueryChanged query ->
       ( { model | query = query }
-      , Cmd.none
+      , Nav.replaceUrl key <|
+          Url.absolute [] <|
+            if String.isEmpty query then
+              []
+            else
+              [ Url.string "q" query ]
       )
 
     GotPackages result ->
