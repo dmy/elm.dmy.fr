@@ -9,7 +9,7 @@ module Page.Search exposing
 
 import Elm.Version as V
 import Html exposing (..)
-import Html.Attributes exposing (autofocus, class, href, placeholder, style, value)
+import Html.Attributes exposing (autofocus, class, href, name, placeholder, style, type_, value)
 import Url
 import Html.Events exposing (..)
 import Html.Lazy exposing (..)
@@ -119,13 +119,16 @@ view model =
 viewSearch : String -> Entries -> Html Msg
 viewSearch query entries =
   div [ class "catalog" ]
-    [ input
-        [ placeholder "Search"
-        , value query
-        , onInput QueryChanged
-        , autofocus True
+    [ Html.form []
+        [ input
+            [ placeholder "Search"
+            , value query
+            , onInput QueryChanged
+            , autofocus True
+            , name "q"
+            ]
+            []
         ]
-        []
     , case entries of
         Failure ->
           div Problem.styles (Problem.offline "search.json")
