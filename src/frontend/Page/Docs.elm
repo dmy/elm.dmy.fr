@@ -432,7 +432,8 @@ viewSidebarModules model =
       else
         let
           query =
-            String.toLower model.query
+            -- String.trim allows to display all items with a space
+            String.toLower (String.trim model.query)
         in
         ul [] (List.filterMap (viewSearchItem model query) modules)
 
