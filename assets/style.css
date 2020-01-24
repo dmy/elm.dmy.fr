@@ -19,7 +19,7 @@ p, li {
 }
 
 a {
-  color: #1184CE;
+  color: #1293d8;
   text-decoration: none;
 }
 a:hover {
@@ -63,22 +63,22 @@ pre {
 .header {
   display: flex;
   padding: 10px 0;
-  color: #333333;
+  color: white;
   font-size: 24px;
   margin: 0;
   text-overflow: ellipsis;
+}
+
+.header > a {
+  color: white;
 }
 
 .header > a:first-of-type {
   margin-right: 20px;
 }
 
-.header a:hover {
-  color: #333333;
-}
-
 .header-underbar {
-  background-color: #60B5CC;
+  background-color: #1293d8;
   margin: 0;
   padding: 1px 0;
 }
