@@ -94,7 +94,7 @@ init session author project version focus =
   case Session.getReleases session author project of
     Just releases ->
       let
-        latest = Release.getLatest releases
+        latest = Release.getLatestVersion releases
       in
       getInfo latest { model | latest = Success latest }
 
@@ -187,7 +187,7 @@ update msg model =
 
         Ok releases ->
           let
-            latest = Release.getLatest releases
+            latest = Release.getLatestVersion releases
           in
           getInfo latest
             { model
