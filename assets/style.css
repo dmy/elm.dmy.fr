@@ -178,17 +178,18 @@ pre {
   padding: 20px;
   margin: 20px 20px 20px 40px;
   border-left: 1px solid #eeeeee;
+  line-height: 1.5em;
 }
 
 .pkg-nav h2 {
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 
 .pkg-nav input {
   width: 200px;
   font-size: 1em;
   padding: 4px;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
   border: 1px solid #eeeeee;
   border-radius: 6px;
 }
@@ -219,6 +220,26 @@ pre {
   padding-bottom: 10px;
 }
 
+
+
+/* MANIFEST */
+
+
+.pkg-install {
+  position: relative;
+  display: inline-block;
+}
+
+.pkg-install pre {
+  min-width: 200px;
+  margin: 10px 0 0 0;
+  padding: 6px 4px;
+  border-radius: 6px;
+}
+
+.pkg-release h2 {
+  margin-top: 10px;
+}
 
 
 /* CATALOG */

@@ -10,7 +10,10 @@ module Page.Docs exposing
 
 
 import Browser.Dom as Dom
+import Elm.Constraint as Constraint exposing (Constraint)
 import Elm.Docs as Docs
+import Elm.License as License
+import Elm.Package as Package
 import Elm.Project as Project
 import Elm.Version as V
 import Html exposing (..)
@@ -28,6 +31,7 @@ import Task
 import Url.Builder as Url
 import Utils.Markdown as Markdown
 import Utils.OneOrMore exposing (OneOrMore)
+import Time
 
 
 
@@ -45,6 +49,7 @@ type alias Model =
   , readme : Status String
   , docs : Status (List Docs.Module)
   , manifest : Status Project.PackageInfo
+  , time : Status Time.Posix
   }
 
 
@@ -89,14 +94,19 @@ init session author project version focus =
       , readme = Loading
       , docs = Loading
       , manifest = Loading
+      , time = Loading
       }
   in
   case Session.getReleases session author project of
     Just releases ->
       let
         latest = Release.getLatestVersion releases
+        time =
+          Release.getTime (Maybe.withDefault latest version) releases
+            |> Maybe.map Success
+            |> Maybe.withDefault Failure
       in
-      getInfo latest { model | latest = Success latest }
+      getInfo latest { model | latest = Success latest, time = time }
 
     Nothing ->
       ( model
@@ -130,6 +140,7 @@ getInfo latest model =
       ( { model
             | readme = Success info.readme
             , docs = Success info.docs
+            , manifest = Success info.manifest
         }
       , scrollIfNeeded model.focus
       )
@@ -188,10 +199,15 @@ update msg model =
         Ok releases ->
           let
             latest = Release.getLatestVersion releases
+            time =
+              Release.getTime (Maybe.withDefault latest model.version) releases
+                |> Maybe.map Success
+                |> Maybe.withDefault Failure
           in
           getInfo latest
             { model
                 | latest = Success latest
+                , time = time
                 , session = Session.addReleases model.author model.project releases model.session
             }
 
@@ -448,6 +464,7 @@ viewSidebar model =
         ]
         []
     , viewSidebarModules model
+    , lazy2 viewManifestInfo model.manifest model.time
     ]
 
 
@@ -573,7 +590,7 @@ viewBrowseSourceLinkHelp author project version =
         [ author, project, "tree", V.toString version ]
         []
   in
-  a [ class "pkg-nav-module", href url ] [ text "Browse Source" ]
+  a [ href url ] [ text "Browse Source" ]
 
 
 
@@ -603,6 +620,166 @@ viewValueItem { author, project, version } moduleName ownerName valueName =
   in
   li [ class "pkg-nav-value" ] [ navLink valueName url False ]
 
+
+
+-- VIEW MANIFEST INFO
+
+
+viewManifestInfo : Status Project.PackageInfo -> Status Time.Posix -> Html msg
+viewManifestInfo manifestStatus timeStatus =
+  case manifestStatus of
+    Failure ->
+      text ""
+
+    Loading ->
+      text ""
+
+    Success manifest ->
+      div []
+        [ viewInstall manifest
+        , viewRelease manifest timeStatus
+        , viewDepedencies manifest
+        ]
+
+
+
+-- VIEW INSTALL
+
+
+viewInstall : Project.PackageInfo -> Html msg
+viewInstall manifest =
+  case V.fromString "0.19.0" of
+    Just elm019 ->
+      if Constraint.check elm019 manifest.elm then
+          viewInstallHelp "elm install" (Package.toString manifest.name)
+
+      else
+          viewInstallHelp "elm-package install" (Package.toString manifest.name)
+
+    Nothing ->
+      text ""
+
+
+viewInstallHelp : String -> String -> Html msg
+viewInstallHelp command package =
+  div
+    [ class "pkg-install"
+    ]
+    [ h2 [] [ text "Install" ]
+    , pre [] [ text (command ++ " " ++ package) ]
+    ]
+
+
+
+-- VIEW RELEASE
+
+
+viewRelease : Project.PackageInfo -> Status Time.Posix -> Html msg
+viewRelease manifest timeStatus =
+  let
+    licenseUrl =
+      Url.crossOrigin
+        "https://github.com"
+        [ Package.toString manifest.name, "blob", V.toString manifest.version, "LICENSE" ]
+        []
+  in
+  div
+    [ class "pkg-release"
+    ]
+    [ h2 [] [ text "Release" ]
+    , viewTime manifest timeStatus
+    , br [] []
+    , a [ href licenseUrl ] [ text (License.toString manifest.license) ]
+    ]
+
+
+viewTime : Project.PackageInfo -> Status Time.Posix -> Html msg
+viewTime manifest timeStatus =
+  case timeStatus of
+    Failure ->
+      text ""
+
+    Loading ->
+      text ""
+
+    Success time ->
+      let
+        releasesUrl =
+          Url.crossOrigin "https://github.com" [ Package.toString manifest.name, "releases" ] []
+      in
+      a [ href releasesUrl ]
+        [ text <|
+            String.concat
+              [ monthToString (Time.toMonth Time.utc time)
+              , ", "
+              , String.fromInt (Time.toDay Time.utc time)
+              , " "
+              , String.fromInt (Time.toYear Time.utc time)
+              ]
+        ]
+
+
+monthToString : Time.Month -> String
+monthToString month =
+  case month of
+    Time.Jan -> "January"
+    Time.Feb -> "February"
+    Time.Mar -> "March"
+    Time.Apr -> "April"
+    Time.May -> "May"
+    Time.Jun -> "June"
+    Time.Jul -> "July"
+    Time.Aug -> "August"
+    Time.Sep -> "September"
+    Time.Oct -> "October"
+    Time.Nov -> "November"
+    Time.Dec -> "December"
+
+
+
+-- VIEW DEPENDENCIES
+
+
+viewDepedencies : Project.PackageInfo -> Html msg
+viewDepedencies manifest =
+  div [ class "pkg-deps" ]
+    [ h2 [] [ text "Dependencies" ]
+    , ul [] <|
+        li [] [ viewElmDependency manifest.elm ]
+          :: (manifest.deps |> List.sortBy (Tuple.first >> Package.toString) |> List.map viewDependency)
+    ]
+
+
+viewElmDependency : Constraint -> Html msg
+viewElmDependency constraint =
+  a
+    [ href "https://guide.elm-lang.org/install/elm.html"
+    ]
+    [ text ("elm " ++ constraintLower constraint)
+    ]
+
+
+viewDependency : (Package.Name, Constraint) -> Html msg
+viewDependency (packageName, constraint) =
+  let
+    lower = constraintLower constraint
+    name = Package.toString packageName
+  in
+  li []
+    [ a [ href (Url.absolute [ "packages", name, lower ] []) ]
+        [ text (name ++ " " ++ lower) ]
+    ]
+
+
+constraintLower : Constraint -> String
+constraintLower constraint =
+  let
+      str = Constraint.toString constraint
+  in
+    str
+      |> String.words
+      |> List.head
+      |> Maybe.withDefault str
 
 
 -- LINK HELPERS
