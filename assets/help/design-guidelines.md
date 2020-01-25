@@ -34,7 +34,7 @@ Abstraction is a tool, not a design goal. Unless abstraction is making someoneâ€
 
 ## Write helpful documentation with examples
 
-[This document](/help/documentation-format) describes how documentation works in Elm, and you can preview your docs [here](/help/docs-preview).
+[This document](/help/documentation-format) describes how documentation works in Elm, and you can preview your docs [here](https://elm-doc-preview.netlify.com/).
 
 Providing examples of common uses is extremely helpful. Do it! The standard libraries all make a point to have examples that show how one *should* be using those functions.
 
