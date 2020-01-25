@@ -139,7 +139,7 @@ viewSegment segment =
 
 viewWarning : Warning -> Html msg
 viewWarning warning =
-  div [ class "header-underbar" ] <|
+  div [] <|
     case warning of
       NoProblems ->
         []

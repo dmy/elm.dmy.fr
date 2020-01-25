@@ -77,13 +77,8 @@ pre {
   margin-right: 20px;
 }
 
-.header-underbar {
-  background-color: #1293d8;
-  margin: 0;
-  padding: 1px 0;
-}
-
 .version-warning {
+  background-color: #1293d8;
   text-align: center;
   margin: 0;
   padding: 4px 0;
