@@ -74,9 +74,10 @@ viewValue info { name, comment, tipe } =
   let
     nameHtml =
       toBoldLink info name
+
   in
   viewCodeBlock name comment <|
-    case toLines info Other tipe of
+    case toLines info Other (String.length name + 3) tipe of
       One _ line ->
         [ nameHtml :: space :: colon :: space :: line ]
 
@@ -100,7 +101,7 @@ viewBinop info { name, comment, tipe } =
       makeLink info [bold] name ("(" ++ name ++ ")")
   in
   viewCodeBlock name comment <|
-    case toLines info Other tipe of
+    case toLines info Other (String.length name + 3) tipe of
       One _ line ->
         [ nameHtml :: space :: colon :: space :: line ]
 
@@ -125,7 +126,7 @@ viewAlias info { name, args, comment, tipe } =
       ]
   in
   viewCodeBlock name comment <|
-    aliasNameLine :: List.map indentFour (linesToList (toLines info Other tipe))
+    aliasNameLine :: List.map indentFour (linesToList (toLines info Other 4 tipe))
 
 
 
@@ -154,7 +155,7 @@ unionMore : Info -> MoreSettings (String, List Type.Type) msg
 unionMore info =
   let
     ctorToLines (ctor,args) =
-      toOneOrMore (toLines info Other (Type.Type ctor args))
+      toOneOrMore (toLines info Other 0 (Type.Type ctor args))
   in
   { open = [ text "    = " ]
   , sep = text "    | "
@@ -261,8 +262,8 @@ type Lines line
 type Context = Func | App | Other
 
 
-toLines : Info -> Context -> Type.Type -> Lines (Line msg)
-toLines info context tipe =
+toLines : Info -> Context -> Int -> Type.Type -> Lines (Line msg)
+toLines info context prefixWidth tipe =
   case tipe of
     Type.Var x ->
       One (String.length x) [text x]
@@ -271,20 +272,20 @@ toLines info context tipe =
       let
         lambdaToLine =
           if context == Other then
-            toLinesHelp lambdaOne lambdaMore
+            toLinesHelp (lambdaOne prefixWidth) lambdaMore
           else
             toLinesHelp lambdaOneParens lambdaMoreParens
       in
-      lambdaToLine (toLines info Func arg) <|
-        List.map (toLines info Func) (collectArgs [] result)
+      lambdaToLine (toLines info Func 0 arg) <|
+        List.map (toLines info Func 0) (collectArgs [] result)
 
     Type.Tuple [] ->
       One 2 [text "()"]
 
     Type.Tuple (arg :: args) ->
       toLinesHelp tupleOne tupleMore
-        (toLines info Other arg)
-        (List.map (toLines info Other) args)
+        (toLines info Other 0 arg)
+        (List.map (toLines info Other 0) args)
 
     Type.Type name args ->
       let
@@ -295,7 +296,7 @@ toLines info context tipe =
         (typeOne needsParens)
         (typeMore needsParens)
         (toLinkLine info name)
-        (List.map (toLines info App) args)
+        (List.map (toLines info App 0) args)
 
     Type.Record [] Nothing ->
       One 2 [text "{}"]
@@ -306,7 +307,7 @@ toLines info context tipe =
     Type.Record (f :: fs) extension ->
       let
         toLns ( field, fieldType ) =
-          ( field, toLines info Other fieldType )
+          ( field, toLines info Other 0 fieldType )
       in
       case extension of
         Nothing ->
@@ -338,13 +339,13 @@ collectArgs revArgs tipe =
       List.reverse (tipe :: revArgs)
 
 
-lambdaOne : OneSettings (Lines (Line msg)) msg
-lambdaOne =
+lambdaOne : Int -> OneSettings (Lines (Line msg)) msg
+lambdaOne openWidth =
   { open = []
   , sep = [ text " -> " ]
   , close = []
-  , openWidth = 0
-  , sepWidth = 2
+  , openWidth = openWidth
+  , sepWidth = 4
   , closeWidth = 0
   , toLine = toLine
   }
@@ -367,7 +368,7 @@ lambdaOneParens =
   , sep = [ text " -> " ]
   , close = [ text ")" ]
   , openWidth = 1
-  , sepWidth = 2
+  , sepWidth = 4
   , closeWidth = 1
   , toLine = toLine
   }
