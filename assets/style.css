@@ -177,6 +177,8 @@ pre {
 .pkg-nav {
   width: 200px;
   display: inline-block;
+  position: sticky;
+  top: 0px;
   vertical-align: top;
   padding: 20px;
   margin: 20px 20px 20px 40px;
@@ -286,6 +288,8 @@ pre {
 .catalog-sidebar {
   width: 200px;
   display: inline-block;
+  position: sticky;
+  top: 0px;
   vertical-align: top;
   padding: 20px;
   margin: 20px 20px 20px 40px;
