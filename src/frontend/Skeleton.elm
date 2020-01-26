@@ -56,7 +56,7 @@ helpSegment =
 
 authorSegment : String -> Segment
 authorSegment author =
-  Text author
+  Link (Href.toAuthor author) author
 
 
 projectSegment : String -> String -> Segment

@@ -32,6 +32,7 @@ import Browser.Navigation as Nav
 type alias Model =
   { session : Session.Data
   , query : String
+  , author : Maybe String
   , entries : Entries
   }
 
@@ -42,16 +43,16 @@ type Entries
   | Success (List Entry.Entry)
 
 
-init : Session.Data -> Maybe String -> ( Model, Cmd Msg )
-init session query =
+init : Session.Data -> Maybe String -> Maybe String -> ( Model, Cmd Msg )
+init session query author =
   case Session.getEntries session of
     Just entries ->
-      ( Model session (Maybe.withDefault "" query) (Success entries)
+      ( Model session (Maybe.withDefault "" query) author (Success entries)
       , Cmd.none
       )
 
     Nothing ->
-      ( Model session (Maybe.withDefault "" query) Loading
+      ( Model session (Maybe.withDefault "" query) author Loading
       , Http.send GotPackages <|
           Http.get "/search.json" (Decode.list Entry.decoder)
       )
@@ -73,11 +74,16 @@ update key msg model =
     QueryChanged query ->
       ( { model | query = query }
       , Nav.replaceUrl key <|
-          Url.absolute [] <|
-            if String.isEmpty query then
+          Url.absolute
+            (case model.author of
+               Nothing     -> []
+               Just author -> [ "packages", author ]
+            )
+            (if String.isEmpty query then
               []
             else
               [ Url.string "q" query ]
+            )
       )
 
     GotPackages result ->
@@ -112,12 +118,15 @@ update key msg model =
 
 view : Model -> Skeleton.Details Msg
 view model =
-  { title = "Elm Packages"
-  , header = []
+  { title = Maybe.withDefault "Elm Packages" model.author
+  , header =
+      case model.author of
+        Nothing     -> []
+        Just author -> [ Skeleton.authorSegment author ]
   , warning = Skeleton.NoProblems
   , attrs = []
   , kids =
-      [ lazy2 viewSearch model.query model.entries
+      [ lazy3 viewSearch model.query model.author model.entries
       , viewSidebar
       ]
   }
@@ -127,8 +136,8 @@ view model =
 -- VIEW SEARCH
 
 
-viewSearch : String -> Entries -> Html Msg
-viewSearch query entries =
+viewSearch : String -> Maybe String -> Entries -> Html Msg
+viewSearch query author entries =
   div [ class "catalog" ]
     [ Html.form
         [ onSubmit QuerySubmitted
@@ -152,7 +161,7 @@ viewSearch query entries =
         Success es ->
           let
             results =
-              List.map viewEntry (Entry.search query es)
+              List.map viewEntry (Entry.search query author es)
           in
           div []
             [ Keyed.node "div" [] <|

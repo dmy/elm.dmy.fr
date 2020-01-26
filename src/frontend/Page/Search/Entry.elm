@@ -27,8 +27,8 @@ type alias Entry =
 -- SEARCH
 
 
-search : String -> List Entry -> List Entry
-search query entries =
+search : String -> Maybe String -> List Entry -> List Entry
+search query maybeAuthor entries =
   let
     queryTerms =
       String.words (String.toLower query)
@@ -46,8 +46,16 @@ search query entries =
           || String.contains term lowerSummary
       in
       List.all matchesTerm queryTerms
+
+    matchesAuthor entry =
+      case maybeAuthor of
+        Nothing     -> True
+        Just author -> entry.author == author
+
+    matches entry =
+      matchesAllTerms entry && matchesAuthor entry
   in
-  List.filter matchesAllTerms entries
+  List.filter matches entries
 
 
 

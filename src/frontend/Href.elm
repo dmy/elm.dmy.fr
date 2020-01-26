@@ -1,5 +1,6 @@
 module Href exposing
-  ( toProject
+  ( toAuthor
+  , toProject
   , toVersion
   , toModule
   )
@@ -11,6 +12,11 @@ import Url.Builder as Url
 
 
 -- HREFS
+
+
+toAuthor : String -> String
+toAuthor author =
+  Url.absolute [ "packages", author, "" ] []
 
 
 toProject : String -> String -> String

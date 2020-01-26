@@ -214,7 +214,11 @@ stepUrl url model =
       oneOf
         [ route (top <?> Query.string "q")
             (\query ->
-              stepSearch model (Search.init session (Maybe.map (String.replace "+" " ") query))
+              stepSearch model (Search.init session (Maybe.map (String.replace "+" " ") query ) Nothing)
+            )
+        , route (s "packages" </> author_ <?> Query.string "q")
+            (\author query ->
+              stepSearch model (Search.init session (Maybe.map (String.replace "+" " ") query ) (Just author))
             )
         , route (s "packages" </> author_ </> project_)
             (\author project ->
