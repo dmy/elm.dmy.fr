@@ -170,7 +170,7 @@ viewSearch query author entries =
                 [ text "Need 0.18 packages? For "
                 , a [ href "https://gist.github.com/evancz/9031e37902dfaec250a08a7aa6e17b10" ] [ text "technical reasons" ]
                 , text ", search "
-                , a [ href "https://dmy.github.io/elm-0.18-packages/" ] [ text "here" ]
+                , a [ href "https://old.elm.dmy.fr" ] [ text "here" ]
                 , text " instead!"
                 ]
             ]
