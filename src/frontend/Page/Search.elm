@@ -236,9 +236,11 @@ viewExactVersions entry =
 viewSidebar : Html msg
 viewSidebar =
   div [ class "catalog-sidebar" ]
-    [ h2 [] [ text "Popular Packages" ]
-    , ul [] <|
-        List.map viewPopularPackage [ "core", "html", "json", "browser", "url", "http" ]
+    [ h2 [] [ text "Core Packages" ]
+    , ul []
+        [ li [] [ a [ href "/packages/elm" ] [ text "elm" ] ]
+        , li [] [ a [ href "/packages/elm-explorations" ] [ text "elm-explorations" ] ]
+        ]
     , h2 [] [ text "Resources" ]
     , ul []
         [ li [] [ a [ href "https://klaftertief.github.io/elm-search/" ] [ text "Fancy Search" ] ]
