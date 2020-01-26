@@ -63,6 +63,7 @@ init session query =
 
 type Msg
   = QueryChanged String
+  | QuerySubmitted
   | GotPackages (Result Http.Error (List Entry.Entry))
 
 
@@ -94,6 +95,16 @@ update key msg model =
           , Cmd.none
           )
 
+    QuerySubmitted ->
+      if String.contains "->" model.query then
+        (model
+        , Nav.load <|
+            Url.crossOrigin "https://klaftertief.github.io" [ "elm-search" ] [ Url.string "q" model.query ]
+        )
+
+      else
+        (model, Cmd.none)
+
 
 
 -- VIEW
@@ -119,7 +130,9 @@ view model =
 viewSearch : String -> Entries -> Html Msg
 viewSearch query entries =
   div [ class "catalog" ]
-    [ Html.form []
+    [ Html.form
+        [ onSubmit QuerySubmitted
+        ]
         [ input
             [ placeholder "Search"
             , value query
