@@ -37,6 +37,7 @@ type alias Details msg =
 type Warning
   = NoProblems
   | NewerVersion String V.Version
+  | IncompatibleElm V.Version
 
 
 
@@ -139,17 +140,21 @@ viewSegment segment =
 
 viewWarning : Warning -> Html msg
 viewWarning warning =
-  div [] <|
-    case warning of
-      NoProblems ->
-        []
+  case warning of
+    NoProblems ->
+      text ""
 
-      NewerVersion url version ->
-        [ p [ class "version-warning" ]
-            [ text "Warning! The latest version of this package is "
-            , a [ href url ] [ text (V.toString version) ]
-            ]
+    NewerVersion url version ->
+      p [ class "version-warning" ]
+        [ text "Warning! The latest version of this package is "
+        , a [ href url ] [ text (V.toString version) ]
         ]
+
+    IncompatibleElm version ->
+      p [ class "version-warning" ]
+        [ text ("Warning! This package is not compatible with Elm " ++ V.toString version)
+        ]
+
 
 
 
@@ -182,7 +187,8 @@ viewLogo =
         ]
         [ Logo.logo 30
         , div
-            [ style "color" "white"
+            [ class "logo-text"
+            , style "color" "white"
             , style "padding-left" "8px"
             ]
             [ div [ style "line-height" "20px" ] [ text "elm" ]

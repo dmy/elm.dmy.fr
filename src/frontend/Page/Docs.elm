@@ -338,21 +338,34 @@ toWarning : Model -> Skeleton.Warning
 toWarning model =
   case model.version of
     Nothing ->
-      Skeleton.NoProblems
+      toElmWarning model.manifest
 
     Just version ->
       case model.latest of
         Success latest ->
           if version == latest then
-            Skeleton.NoProblems
+            toElmWarning model.manifest
           else
             Skeleton.NewerVersion (toNewerUrl model) latest
 
         Loading ->
-          Skeleton.NoProblems
+          toElmWarning model.manifest
 
         Failure ->
-          Skeleton.NoProblems
+          toElmWarning model.manifest
+
+
+toElmWarning : Status Project.PackageInfo -> Skeleton.Warning
+toElmWarning status =
+  case (status, V.fromString "0.19.1") of
+    (Success manifest, Just elm_0_19_1) ->
+      if Constraint.check elm_0_19_1 manifest.elm then
+        Skeleton.NoProblems
+      else
+        Skeleton.IncompatibleElm elm_0_19_1
+
+    _ ->
+      Skeleton.NoProblems
 
 
 toNewerUrl : Model -> String
