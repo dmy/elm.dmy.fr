@@ -12,8 +12,12 @@ import Svg.Attributes as A exposing (..)
 
 logo : Int -> Html.Html msg
 logo n =
+  let
+    size = String.fromInt n
+  in
   svg
-    [ height (String.fromInt n)
+    [ width size
+    , height size
     , viewBox "0 0 600 600"
     , fill "white"
     ]
