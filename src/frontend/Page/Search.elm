@@ -7,10 +7,10 @@ module Page.Search exposing
   )
 
 
+import Browser.Navigation as Nav
 import Elm.Version as V
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, class, href, name, placeholder, style, type_, value)
-import Url
 import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Html.Keyed as Keyed
@@ -19,10 +19,12 @@ import Href
 import Json.Decode as Decode
 import Page.Search.Entry as Entry
 import Page.Problem as Problem
+import Process
 import Session
 import Skeleton
+import Task
 import Url.Builder as Url
-import Browser.Navigation as Nav
+import Url
 
 
 
@@ -34,6 +36,7 @@ type alias Model =
   , query : String
   , author : Maybe String
   , entries : Entries
+  , debounce : Debounce
   }
 
 
@@ -43,16 +46,23 @@ type Entries
   | Success (List Entry.Entry)
 
 
+type Debounce
+  = Idle
+  | RunNow
+  | Postpone
+
+
+
 init : Session.Data -> Maybe String -> Maybe String -> ( Model, Cmd Msg )
 init session query author =
   case Session.getEntries session of
     Just entries ->
-      ( Model session (Maybe.withDefault "" query) author (Success entries)
+      ( Model session (Maybe.withDefault "" query) author (Success entries) Idle
       , Cmd.none
       )
 
     Nothing ->
-      ( Model session (Maybe.withDefault "" query) author Loading
+      ( Model session (Maybe.withDefault "" query) author Loading Idle
       , Http.send GotPackages <|
           Http.get "/search.json" (Decode.list Entry.decoder)
       )
@@ -66,25 +76,14 @@ type Msg
   = QueryChanged String
   | QuerySubmitted
   | GotPackages (Result Http.Error (List Entry.Entry))
+  | DebounceDelayElapsed
 
 
-update : Nav.Key -> Msg -> Model -> ( Model, Cmd msg )
+update : Nav.Key -> Msg -> Model -> ( Model, Cmd Msg )
 update key msg model =
   case msg of
     QueryChanged query ->
-      ( { model | query = query }
-      , Nav.replaceUrl key <|
-          Url.absolute
-            (case model.author of
-               Nothing     -> []
-               Just author -> [ "packages", author ]
-            )
-            (if String.isEmpty query then
-              []
-            else
-              [ Url.string "q" query ]
-            )
-      )
+      debounce { model | query = query }
 
     GotPackages result ->
       case result of
@@ -101,15 +100,59 @@ update key msg model =
           , Cmd.none
           )
 
-    QuerySubmitted ->
-      if String.contains "->" model.query then
-        (model
-        , Nav.load <|
-            Url.crossOrigin "https://klaftertief.github.io" [ "elm-search" ] [ Url.string "q" model.query ]
+    DebounceDelayElapsed ->
+      if model.debounce == Postpone then
+        debounce { model | debounce = Idle }
+      else
+        ( { model | debounce = Idle }
+        , addQueryToUrl key model
         )
 
+    QuerySubmitted ->
+      if String.contains "->" model.query then
+        (model, searchByType model.query)
       else
         (model, Cmd.none)
+
+
+debounce : Model -> (Model, Cmd Msg)
+debounce model =
+  case model.debounce of
+    Idle ->
+      ( { model | debounce = RunNow }
+      , Task.perform (\_ -> DebounceDelayElapsed) (Process.sleep 200)
+      )
+
+    RunNow ->
+      ( { model | debounce = Postpone }
+      , Cmd.none
+      )
+
+    Postpone ->
+      ( { model | debounce = Postpone }
+      , Cmd.none
+      )
+
+
+searchByType : String -> Cmd msg
+searchByType query =
+  Nav.load <|
+    Url.crossOrigin "https://klaftertief.github.io" [ "elm-search" ] [ Url.string "q" query ]
+
+
+addQueryToUrl : Nav.Key -> Model -> Cmd msg
+addQueryToUrl key model =
+  Nav.replaceUrl key <|
+    Url.absolute
+      (case model.author of
+         Nothing     -> []
+         Just author -> [ "packages", author ]
+      )
+      (if String.isEmpty model.query then
+        []
+      else
+        [ Url.string "q" model.query ]
+      )
 
 
 
