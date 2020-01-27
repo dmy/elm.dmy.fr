@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic,700italic|Source+Code+Pro:400,700);
 
 html, head, body {
   margin: 0;
@@ -26,8 +26,8 @@ a:hover {
   color: rgb(234,21,122);
   text-decoration: underline;
 }
-a .light { color: #5FABDC; }
-a:hover .light { color: rgb(234,21,122); }
+a .pkg-summary-author { color: #5FABDC; }
+a:hover .pkg-summary-author { color: rgb(234,21,122); }
 
 pre {
   margin: 0;
@@ -58,15 +58,18 @@ pre {
   width: 920px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 10px;
 }
 
 .header {
   display: flex;
+  align-items: center;
   padding: 10px 0;
   color: white;
   font-size: 24px;
   margin: 0;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header > a {
@@ -94,7 +97,9 @@ pre {
   margin: 0 10px;
 }
 
-
+.logo-text {
+  font-weight: 600;
+}
 
 /* FOOTER */
 
@@ -275,24 +280,34 @@ pre {
   border-bottom: 1px solid #eeeeee;
 }
 
+.pkg-summary-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .pkg-summary h1 {
+  flex: 1;
   margin: 0;
   font-size: 1.5em;
   display: inline-block;
+}
+
+.pkg-summary-project {
+  /*white-space: nowrap;*/
 }
 
 .pkg-summary-desc {
   margin: 0.5em 0;
 }
 
-.pkg-summary-hints {
-  float: right;
+.pkg-summary-version {
   font-size: 1em;
-  padding-top: 0.5em;
+  margin: 0.5em 10px 0 10px;
   color: #bbbbbb;
 }
 
-.pkg-summary-hints a {
+.pkg-summary-version a {
   color: #bbbbbb;
 }
 
@@ -350,4 +365,87 @@ Not really any of those on the website though AFAIK.
 :not(pre) > code::before, :not(pre) > code::after {
   letter-spacing: -0.2em;
   content: "\00a0";
+}
+
+
+
+/* SMALL WIDTH SCREENS */
+
+
+@media screen and (max-width: 768px) {
+  .center {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    width: auto;
+    box-sizing: border-box;
+  }
+  .center.pkg-overview {
+    display: block;
+  }
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 20px;
+  }
+  .header > a:first-of-type {
+    margin-right: 10px;
+  }
+  .header .logo-text {
+    display: none;
+  }
+  .footer {
+    padding: 10px;
+  }
+  .catalog {
+    flex: 1;
+    width: auto;
+    display: block;
+  }
+  .catalog form {
+    display: flex;
+    margin-right: 10px;
+  }
+  .catalog input {
+    flex: 1;
+    width: auto;
+  }
+  .catalog-sidebar {
+    display: none;
+  }
+  .block-list {
+    width: auto;
+  }
+  .pkg-summary h1 {
+    flex: 1;
+    overflow-wrap: anywhere;
+    display: inline-block;
+  }
+  .pkg-summary-desc {
+    clear: right;
+  }
+  .pkg-nav {
+    position: static;
+    border: 0;
+    padding: 0;
+    margin: 0.5em 0 0 0;
+  }
+  .pkg-manifest {
+    display: none;
+  }
+  .docs-header {
+    box-sizing: border-box;
+    width: calc(100vw - 40px);
+    overflow-x: auto;
+  }
+  .block-list pre {
+    box-sizing: border-box;
+    width: calc(100vw - 40px);
+  }
+  .docs-comment pre {
+    box-sizing: border-box;
+    width: calc(100vw - 40px - 36px);
+  }
+  .spacey-char {
+    margin: 0 4px;
+  }
 }

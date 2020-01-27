@@ -648,7 +648,7 @@ viewManifestInfo manifestStatus timeStatus =
       text ""
 
     Success manifest ->
-      div []
+      div [ class "pkg-manifest" ]
         [ viewInstall manifest
         , viewRelease manifest timeStatus
         , viewDepedencies manifest

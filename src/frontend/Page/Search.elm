@@ -17,7 +17,7 @@ import Html.Keyed as Keyed
 import Http
 import Href
 import Json.Decode as Decode
-import Page.Search.Entry as Entry
+import Page.Search.Entry as Entry exposing (Entry)
 import Page.Problem as Problem
 import Process
 import Session
@@ -43,7 +43,7 @@ type alias Model =
 type Entries
   = Failure
   | Loading
-  | Success (List Entry.Entry)
+  | Success (List Entry)
 
 
 type Debounce
@@ -75,7 +75,7 @@ init session query author =
 type Msg
   = QueryChanged String
   | QuerySubmitted
-  | GotPackages (Result Http.Error (List Entry.Entry))
+  | GotPackages (Result Http.Error (List Entry))
   | DebounceDelayElapsed
 
 
@@ -224,52 +224,54 @@ viewSearch query author entries =
 -- VIEW ENTRY
 
 
-viewEntry : Entry.Entry -> (String, Html msg)
+viewEntry : Entry -> (String, Html msg)
 viewEntry entry =
   ( entry.author ++ "/" ++ entry.project
   , lazy viewEntryHelp entry
   )
 
 
-viewEntryHelp : Entry.Entry -> Html msg
+viewEntryHelp : Entry -> Html msg
 viewEntryHelp ({ author, project, summary } as entry) =
   div [ class "pkg-summary" ]
-    [ div []
+    [ div [ class "pkg-summary-title" ]
         [ h1 []
             [ a [ href (Href.toVersion author project Nothing) ]
-                [ span [ class "light" ] [ text (author ++ "/") ]
-                , text project
+                [ span [ class "pkg-summary-author" ] [ text (author ++ "/") ]
+                , wbr [] []
+                , span [ class "pkg-summary-project" ] [ text project ]
                 ]
             ]
-        , viewExactVersions entry
+        , viewLatestVersion entry
         ]
     , p [ class "pkg-summary-desc" ] [ text summary ]
     ]
 
 
-viewExactVersions : Entry.Entry -> Html msg
-viewExactVersions entry =
+viewLatestVersion : Entry -> Html msg
+viewLatestVersion entry =
   let
-    exactVersion v =
-      a [ href (Href.toVersion entry.author entry.project (Just v))
-        ]
-        [ text (V.toString v)
-        ]
-
-    allVersions =
-      List.intersperse (text " … ") (List.map exactVersion entry.versions)
-      ++
-      [ text " — "
-      , a [ href (Href.toProject entry.author entry.project) ] [ text "Overview" ]
-      ]
+    latest = List.head (List.reverse entry.versions)
   in
-  span [ class "pkg-summary-hints" ] <|
-    case Maybe.map V.toTuple (List.head entry.versions) of
-      Just (1,0,0) ->
-        allVersions
+  div [ class "pkg-summary-version" ] <|
+    case (latest, Maybe.map V.toTuple latest) of
+      (Just version, Just (1, 0, 0)) ->
+        [ a
+            [ href (Href.toVersion entry.author entry.project (Just version)) ]
+            [ text (V.toString version) ]
+        ]
 
-      _ ->
-        text "… " :: allVersions
+      (Just version, _) ->
+        [ a
+            [ href (Href.toProject entry.author entry.project) ]
+            [ text "… " ]
+        , a
+            [ href (Href.toVersion entry.author entry.project (Just version)) ]
+            [ text (V.toString version) ]
+        ]
+
+      (Nothing, _) ->
+        []
 
 
 
@@ -291,17 +293,6 @@ viewSidebar =
         , li [] [ a [ href "/help/design-guidelines" ] [ text "API Design Guidelines" ] ]
         , li [] [ a [ href "/help/documentation-format" ] [ text "Write great docs" ] ]
         , li [] [ a [ href "https://elm-lang.org" ] [ text "Elm Website" ] ]
-        ]
-    ]
-
-
-viewPopularPackage : String -> Html msg
-viewPopularPackage project =
-  li []
-    [ a [ href (Href.toVersion "elm" project Nothing)
-        ]
-        [ span [ class "light" ] [ text "elm/" ]
-        , text project
         ]
     ]
 
