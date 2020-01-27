@@ -7,6 +7,7 @@ module Page.Search.Entry exposing
 
 import Elm.Version as V
 import Json.Decode as D
+import Utils.Popularity as Popularity
 
 
 
@@ -56,6 +57,7 @@ search query maybeAuthor entries =
       matchesAllTerms entry && matchesAuthor entry
   in
   List.filter matches entries
+    |> List.sortBy (\entry -> negate (Popularity.get entry.author entry.project))
 
 
 
