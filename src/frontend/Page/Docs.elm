@@ -435,7 +435,13 @@ viewModule author project version name status =
       case findModule name allDocs of
         Just docs ->
           let
-            header = h1 [class "block-list-title"] [ text name ]
+            breakableName =
+              name
+                |> String.split "."
+                |> List.map text
+                |> List.intersperse (span [] [ text ".", wbr [] [] ])
+
+            header = h1 [class "block-list-title"] breakableName
             info = Block.makeInfo author project version name allDocs
             blocks = List.map (Block.view info) (Docs.toBlocks docs)
           in

@@ -418,7 +418,15 @@ Not really any of those on the website though AFAIK.
   .docs-header {
     box-sizing: border-box;
     width: calc(100vw - 40px);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-left: 18px;
+    text-indent: -18px;
+  }
+  .block-list h1 {
     overflow-x: auto;
+    width: calc(100vw - 40px);
+    overflow-wrap: break-word;
   }
   .block-list pre {
     box-sizing: border-box;
