@@ -3,6 +3,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Navigation as Nav
+import Browser.Events
 import Dict
 import Elm.Version as V
 import Html
@@ -40,6 +41,7 @@ main =
 type alias Model =
   { key : Nav.Key
   , page : Page
+  , width : Int
   }
 
 
@@ -57,7 +59,7 @@ type Page
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Browser.Events.onResize WindowResized
 
 
 
@@ -80,7 +82,7 @@ view model =
       Skeleton.view SearchMsg (Search.view search)
 
     Docs docs ->
-      Skeleton.view DocsMsg (Docs.view docs)
+      Skeleton.view DocsMsg (Docs.view docs model.width)
 
     Diff diff ->
       Skeleton.view never (Diff.view diff)
@@ -93,11 +95,12 @@ view model =
 -- INIT
 
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ url key =
+init : Int -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init width url key =
   stepUrl url
     { key = key
     , page = NotFound Session.empty
+    , width = width
     }
 
 
@@ -113,6 +116,7 @@ type Msg
   | DiffMsg Diff.Msg
   | DocsMsg Docs.Msg
   | HelpMsg Help.Msg
+  | WindowResized Int Int
 
 
 
@@ -156,6 +160,12 @@ update message model =
       case model.page of
         Help docs -> stepHelp model (Help.update msg docs)
         _         -> ( model, Cmd.none )
+
+
+    WindowResized width height ->
+      ( { model | width = width }
+      , Cmd.none
+      )
 
 
 stepSearch : Model -> ( Search.Model, Cmd Search.Msg ) -> ( Model, Cmd Msg )

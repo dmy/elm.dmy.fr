@@ -261,14 +261,14 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Skeleton.Details Msg
-view model =
+view : Model -> Int -> Skeleton.Details Msg
+view model width =
   { title = toTitle model
   , header = toHeader model
   , warning = toWarning model
   , attrs = []
   , kids =
-      [ viewContent model
+      [ viewContent model width
       , viewSidebar model
       ]
   }
@@ -392,8 +392,8 @@ toNewerUrl model =
 -- VIEW CONTENT
 
 
-viewContent : Model -> Html msg
-viewContent model =
+viewContent : Model -> Int -> Html msg
+viewContent model width =
   case model.focus of
     Readme ->
       lazy viewReadme model.readme
@@ -402,7 +402,7 @@ viewContent model =
       lazy2 viewAbout model.manifest model.time
 
     Module name tag ->
-      lazy5 viewModule model.author model.project model.version name model.docs
+      lazy6 viewModule model.author model.project model.version name model.docs width
 
 
 
@@ -428,8 +428,8 @@ viewReadme status =
 -- VIEW MODULE
 
 
-viewModule : String -> String -> Maybe V.Version -> String -> Status (List Docs.Module) -> Html msg
-viewModule author project version name status =
+viewModule : String -> String -> Maybe V.Version -> String -> Status (List Docs.Module) -> Int -> Html msg
+viewModule author project version name status width =
   case status of
     Success allDocs ->
       case findModule name allDocs of
@@ -442,7 +442,7 @@ viewModule author project version name status =
                 |> List.intersperse (span [] [ text ".", wbr [] [] ])
 
             header = h1 [class "block-list-title"] breakableName
-            info = Block.makeInfo author project version name allDocs
+            info = Block.makeInfo author project version name allDocs width
             blocks = List.map (Block.view info) (Docs.toBlocks docs)
           in
           div [ class "block-list" ] (header :: blocks)

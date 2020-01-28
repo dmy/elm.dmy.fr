@@ -19,9 +19,9 @@ import Utils.Markdown as Markdown
 -- CONSTANTS
 
 
-maxWidth : Int
-maxWidth =
-  64
+defaultMaxWidth : Int
+defaultMaxWidth =
+  62
 
 
 
@@ -148,14 +148,14 @@ viewUnion info {name, comment, args, tags} =
         [ nameLine ]
 
       t :: ts ->
-        nameLine :: linesToList (toMoreLines (unionMore info) t ts)
+        nameLine :: linesToList (toMoreLines info.maxWidth (unionMore info) t ts)
 
 
 unionMore : Info -> MoreSettings (String, List Type.Type) msg
 unionMore info =
   let
-    ctorToLines (ctor,args) =
-      toOneOrMore (toLines info Other 0 (Type.Type ctor args))
+    ctorToLines maxWidth (ctor,args) =
+      toOneOrMore maxWidth (toLines info Other 0 (Type.Type ctor args))
   in
   { open = [ text "    = " ]
   , sep = text "    | "
@@ -176,6 +176,7 @@ type alias Info =
   , version : Maybe V.Version
   , moduleName : String
   , typeNameDict : TypeNameDict
+  , maxWidth : Int
   }
 
 
@@ -183,17 +184,29 @@ type alias TypeNameDict =
   Dict.Dict String (String, String)
 
 
-makeInfo : String -> String -> Maybe V.Version -> String -> List Docs.Module -> Info
-makeInfo author project version moduleName docsList =
+makeInfo : String -> String -> Maybe V.Version -> String -> List Docs.Module -> Int -> Info
+makeInfo author project version moduleName docsList width =
   let
     addUnion home union docs =
       Dict.insert (home ++ "." ++ union.name) (home, union.name) docs
 
     addModule docs dict =
       List.foldl (addUnion docs.name) dict docs.unions
+
+    blockWidth = width - 40
+    maxWidth = 
+        if blockWidth > 0 && blockWidth < 600 then
+            blockWidth * defaultMaxWidth // 600
+        else
+            defaultMaxWidth
   in
-    Info author project version moduleName <|
-      List.foldl addModule Dict.empty docsList
+    { author = author
+    , project = project
+    , version = version
+    , moduleName = moduleName
+    , typeNameDict = List.foldl addModule Dict.empty docsList
+    , maxWidth = maxWidth
+    }
 
 
 
@@ -272,9 +285,9 @@ toLines info context prefixWidth tipe =
       let
         lambdaToLine =
           if context == Other then
-            toLinesHelp (lambdaOne prefixWidth) lambdaMore
+            toLinesHelp info.maxWidth (lambdaOne prefixWidth) lambdaMore
           else
-            toLinesHelp lambdaOneParens lambdaMoreParens
+            toLinesHelp info.maxWidth lambdaOneParens lambdaMoreParens
       in
       lambdaToLine (toLines info Func 0 arg) <|
         List.map (toLines info Func 0) (collectArgs [] result)
@@ -283,7 +296,7 @@ toLines info context prefixWidth tipe =
       One 2 [text "()"]
 
     Type.Tuple (arg :: args) ->
-      toLinesHelp tupleOne tupleMore
+      toLinesHelp info.maxWidth tupleOne tupleMore
         (toLines info Other 0 arg)
         (List.map (toLines info Other 0) args)
 
@@ -293,6 +306,7 @@ toLines info context prefixWidth tipe =
           context == App && not (List.isEmpty args)
       in
       toLinesHelp
+        info.maxWidth
         (typeOne needsParens)
         (typeMore needsParens)
         (toLinkLine info name)
@@ -312,12 +326,12 @@ toLines info context prefixWidth tipe =
       case extension of
         Nothing ->
           if List.isEmpty fs then
-            toLinesHelp recordOne recordMore (toLns f) (List.map toLns fs)
+            toLinesHelp info.maxWidth recordOne recordMore (toLns f) (List.map toLns fs)
           else
-            toMoreLines recordMore (toLns f) (List.map toLns fs)
+            toMoreLines info.maxWidth recordMore (toLns f) (List.map toLns fs)
 
         Just ext ->
-          case toLinesHelp (recordOneExt ext) recordMoreExt (toLns f) (List.map toLns fs) of
+          case toLinesHelp info.maxWidth (recordOneExt ext) recordMoreExt (toLns f) (List.map toLns fs) of
             One width line ->
               One width line
 
@@ -532,8 +546,8 @@ fieldToLine ( field, lines ) =
       Just ( String.length field + 3 + width, text field :: space :: colon :: space :: line )
 
 
-fieldToLines : (String, Lines (Line msg)) -> OneOrMore (Line msg)
-fieldToLines ( field, lines ) =
+fieldToLines : Int -> (String, Lines (Line msg)) -> OneOrMore (Line msg)
+fieldToLines maxWidth ( field, lines ) =
   case lines of
     One width line ->
       let
@@ -577,8 +591,8 @@ type OneOrMore a =
   OneOrMore a (List a)
 
 
-toOneOrMore : Lines line -> OneOrMore line
-toOneOrMore lines =
+toOneOrMore : Int -> Lines line -> OneOrMore line
+toOneOrMore maxWidth lines =
   case lines of
     One _ line ->
       OneOrMore line []
@@ -608,26 +622,26 @@ type alias MoreSettings a msg =
   , close : Maybe (Line msg)
   , openIndent : Int
   , sepIndent : Int
-  , toLines : a -> OneOrMore (Line msg)
+  , toLines : Int -> a -> OneOrMore (Line msg)
   }
 
 
-toLinesHelp : OneSettings a msg -> MoreSettings a msg -> a -> List a -> Lines (Line msg)
-toLinesHelp one more x xs =
+toLinesHelp : Int -> OneSettings a msg -> MoreSettings a msg -> a -> List a -> Lines (Line msg)
+toLinesHelp maxWidth one more x xs =
   let
     maybeOneLine =
-      toOneLine one.openWidth one.open one (x::xs)
+      toOneLine maxWidth one.openWidth one.open one (x::xs)
   in
   case maybeOneLine of
     Just ( width, line ) ->
       One width line
 
     Nothing ->
-      toMoreLines more x xs
+      toMoreLines maxWidth more x xs
 
 
-toOneLine : Int -> Line msg -> OneSettings a msg -> List a -> Maybe (Int, Line msg)
-toOneLine chunkWidth chunk one entries =
+toOneLine : Int -> Int -> Line msg -> OneSettings a msg -> List a -> Maybe (Int, Line msg)
+toOneLine maxWidth chunkWidth chunk one entries =
   case entries of
     [] ->
       Just ( one.closeWidth, one.close )
@@ -638,7 +652,7 @@ toOneLine chunkWidth chunk one entries =
           Nothing
 
         Just (entryWidth, line) ->
-          case toOneLine one.sepWidth one.sep one remainingEntries of
+          case toOneLine maxWidth one.sepWidth one.sep one remainingEntries of
             Nothing ->
               Nothing
 
@@ -653,11 +667,11 @@ toOneLine chunkWidth chunk one entries =
                 Nothing
 
 
-toMoreLines : MoreSettings a msg -> a -> List a -> Lines (Line msg)
-toMoreLines s x xs =
+toMoreLines : Int -> MoreSettings a msg -> a -> List a -> Lines (Line msg)
+toMoreLines maxWidth s x xs =
   let
     (OneOrMore firstLine firstRest) =
-      s.toLines x
+      s.toLines maxWidth x
 
     openIndentation =
       text (String.repeat s.openIndent " ")
@@ -670,7 +684,7 @@ toMoreLines s x xs =
 
     otherLines =
       List.map ((::) openIndentation) firstRest
-      ++ List.concatMap (toChunk << s.toLines) xs
+      ++ List.concatMap (toChunk << s.toLines maxWidth) xs
   in
     More (s.open ++ firstLine) <|
       case s.close of
