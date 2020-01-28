@@ -62,6 +62,7 @@ type alias Info =
 
 type Focus
   = Readme
+  | About
   | Module String (Maybe String)
 
 
@@ -283,6 +284,9 @@ toTitle model =
     Readme ->
       toGenericTitle model
 
+    About ->
+      toGenericTitle model
+
     Module name _ ->
       name ++ " - " ++ toGenericTitle model
 
@@ -323,6 +327,9 @@ toHeader model =
   ++
     case model.focus of
       Readme ->
+        []
+
+      About ->
         []
 
       Module name _ ->
@@ -374,6 +381,9 @@ toNewerUrl model =
     Readme ->
       Href.toVersion model.author model.project Nothing
 
+    About ->
+      Href.toAbout model.author model.project Nothing
+
     Module name tag ->
       Href.toModule model.author model.project Nothing name tag
 
@@ -387,6 +397,9 @@ viewContent model =
   case model.focus of
     Readme ->
       lazy viewReadme model.readme
+
+    About ->
+      lazy2 viewAbout model.manifest model.time
 
     Module name tag ->
       lazy5 viewModule model.author model.project model.version name model.docs
@@ -468,6 +481,8 @@ viewSidebar model =
     ]
     [ lazy4 viewReadmeLink model.author model.project model.version model.focus
     , br [] []
+    , lazy4 viewAboutLink model.author model.project model.version model.focus
+    , br [] []
     , lazy4 viewBrowseSourceLink model.author model.project model.version model.latest
     , h2 [] [ text "Module Docs" ]
     , input
@@ -477,7 +492,6 @@ viewSidebar model =
         ]
         []
     , viewSidebarModules model
-    , lazy2 viewManifestInfo model.manifest model.time
     ]
 
 
@@ -569,6 +583,20 @@ viewReadmeLink author project version focus =
   navLink "README" (Href.toVersion author project version) <|
     case focus of
       Readme -> True
+      About -> False
+      Module _ _ -> False
+
+
+
+-- VIEW "ABOUT" LINK
+
+
+viewAboutLink : String -> String -> Maybe V.Version -> Focus -> Html msg
+viewAboutLink author project version focus =
+  navLink "About" (Href.toAbout author project version) <|
+    case focus of
+      Readme -> False
+      About -> True
       Module _ _ -> False
 
 
@@ -621,6 +649,9 @@ viewModuleLink model name =
       Readme ->
         False
 
+      About ->
+        False
+
       Module selectedName _ ->
         selectedName == name
 
@@ -635,28 +666,29 @@ viewValueItem { author, project, version } moduleName ownerName valueName =
 
 
 
--- VIEW MANIFEST INFO
+-- VIEW ABOUT
 
 
-viewManifestInfo : Status Project.PackageInfo -> Status Time.Posix -> Html msg
-viewManifestInfo manifestStatus timeStatus =
+viewAbout : Status Project.PackageInfo -> Status Time.Posix -> Html msg
+viewAbout manifestStatus timeStatus =
   case manifestStatus of
-    Failure ->
-      text ""
-
-    Loading ->
-      text ""
-
     Success manifest ->
-      div [ class "pkg-manifest" ]
-        [ viewInstall manifest
+      div [ class "block-list pkg-about" ]
+        [ h1 [] [ text "Summary" ]
+        , text manifest.summary
+        , viewInstall manifest
         , viewRelease manifest timeStatus
-        , viewDepedencies manifest
+        , viewLicense manifest
+        , viewDependencies manifest
         ]
 
+    Loading ->
+      div [ class "block-list pkg-about" ] [ text "" ] -- TODO
 
-
--- VIEW INSTALL
+    Failure ->
+      div
+        (class "block-list pkg-about" :: Problem.styles)
+        (Problem.offline "elm.json")
 
 
 viewInstall : Project.PackageInfo -> Html msg
@@ -675,20 +707,24 @@ viewInstall manifest =
 
 viewInstallHelp : String -> String -> Html msg
 viewInstallHelp command package =
-  div
-    [ class "pkg-install"
+  div []
+    [ h1 [] [ text "Install" ]
+    , pre []
+      [ code [] [ text (command ++ " " ++ package) ]
+      ]
     ]
-    [ h2 [] [ text "Install" ]
-    , pre [] [ text (command ++ " " ++ package) ]
-    ]
-
-
-
--- VIEW RELEASE
 
 
 viewRelease : Project.PackageInfo -> Status Time.Posix -> Html msg
 viewRelease manifest timeStatus =
+  div []
+    [ h1 [] [ text "Release" ]
+    , viewTime manifest timeStatus
+    ]
+
+
+viewLicense : Project.PackageInfo -> Html msg
+viewLicense manifest =
   let
     licenseUrl =
       Url.crossOrigin
@@ -696,12 +732,8 @@ viewRelease manifest timeStatus =
         [ Package.toString manifest.name, "blob", V.toString manifest.version, "LICENSE" ]
         []
   in
-  div
-    [ class "pkg-release"
-    ]
-    [ h2 [] [ text "Release" ]
-    , viewTime manifest timeStatus
-    , br [] []
+  div []
+    [ h1 [] [ text "License" ]
     , a [ href licenseUrl ] [ text (License.toString manifest.license) ]
     ]
 
@@ -753,34 +785,36 @@ monthToString month =
 -- VIEW DEPENDENCIES
 
 
-viewDepedencies : Project.PackageInfo -> Html msg
-viewDepedencies manifest =
+viewDependencies : Project.PackageInfo -> Html msg
+viewDependencies manifest =
   div [ class "pkg-deps" ]
-    [ h2 [] [ text "Dependencies" ]
+    [ h1 [] [ text "Dependencies" ]
     , ul [] <|
         li [] [ viewElmDependency manifest.elm ]
-          :: (manifest.deps |> List.sortBy (Tuple.first >> Package.toString) |> List.map viewDependency)
+          :: (manifest.deps |> List.map viewDependency)
     ]
 
 
 viewElmDependency : Constraint -> Html msg
 viewElmDependency constraint =
-  a
-    [ href "https://guide.elm-lang.org/install/elm.html"
-    ]
-    [ text ("elm " ++ constraintLower constraint)
+  li []
+    [ a [ href "https://guide.elm-lang.org/install/elm.html" ]
+        [ text "elm" ]
+    , text " "
+    , text (Constraint.toString constraint)
     ]
 
 
 viewDependency : (Package.Name, Constraint) -> Html msg
 viewDependency (packageName, constraint) =
   let
-    lower = constraintLower constraint
     name = Package.toString packageName
   in
   li []
-    [ a [ href (Url.absolute [ "packages", name, lower ] []) ]
-        [ text (name ++ " " ++ lower) ]
+    [ a [ href (Url.absolute [ "packages", name, "latest", "" ] []) ]
+        [ text name ]
+    , text " "
+    , span [ class "pkg-constraint" ] [ text (Constraint.toString constraint) ]
     ]
 
 

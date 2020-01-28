@@ -42,15 +42,6 @@ pre {
 
 
 
-/* HOME */
-
-.home-summaries ul {
-  list-style-type: none;
-  padding-left: 1em;
-}
-
-
-
 /* HEADER */
 
 
@@ -227,26 +218,6 @@ pre {
 
 
 
-/* MANIFEST */
-
-
-.pkg-install {
-  position: relative;
-  display: inline-block;
-}
-
-.pkg-install pre {
-  min-width: 200px;
-  margin: 10px 0 0 0;
-  padding: 6px 4px;
-  border-radius: 6px;
-}
-
-.pkg-release h2 {
-  margin-top: 10px;
-}
-
-
 /* CATALOG */
 
 
@@ -369,6 +340,21 @@ Not really any of those on the website though AFAIK.
 
 
 
+/* ABOUT */
+
+.pkg-about h1 {
+  margin-bottom: 10px;
+}
+
+.pkg-about ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pkg-constraint {
+  white-space: nowrap;
+}
+
 /* SMALL WIDTH SCREENS */
 
 
@@ -428,9 +414,6 @@ Not really any of those on the website though AFAIK.
     border: 0;
     padding: 0;
     margin: 0.5em 0 0 0;
-  }
-  .pkg-manifest {
-    display: none;
   }
   .docs-header {
     box-sizing: border-box;

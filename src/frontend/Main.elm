@@ -272,6 +272,7 @@ focus_ : Parser (Docs.Focus -> a) a
 focus_ =
   oneOf
     [ map Docs.Readme top
+    , map Docs.About (s "about")
     , map Docs.Module (moduleName_ </> fragment identity)
     ]
 
