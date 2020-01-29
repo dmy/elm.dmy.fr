@@ -651,7 +651,7 @@ viewModuleLink model name =
     url =
       Href.toModule model.author model.project model.version name Nothing
   in
-  navLink name url <|
+  navModuleLink name url <|
     case model.focus of
       Readme ->
         False
@@ -669,7 +669,7 @@ viewValueItem { author, project, version } moduleName ownerName valueName =
     url =
       Href.toModule author project version moduleName (Just ownerName)
   in
-  li [ class "pkg-nav-value" ] [ navLink valueName url False ]
+  li [ class "pkg-nav-value" ] [ navModuleLink valueName url False ]
 
 
 
@@ -840,16 +840,26 @@ constraintLower constraint =
 
 
 navLink : String -> String -> Bool -> Html msg
-navLink name url isBold =
+navLink =
+  navLinkHelp "pkg-nav-link"
+
+
+navModuleLink : String -> String -> Bool -> Html msg
+navModuleLink =
+  navLinkHelp "pkg-nav-module"
+
+
+navLinkHelp : String -> String -> String -> Bool -> Html msg
+navLinkHelp linkClass name url isBold =
   let
     attributes =
       if isBold then
-        [ class "pkg-nav-module"
+        [ class linkClass
         , style "font-weight" "bold"
         , style "text-decoration" "underline"
         ]
       else
-        [ class "pkg-nav-module"
+        [ class linkClass
         ]
   in
   a (href url :: attributes) [ text name ]
