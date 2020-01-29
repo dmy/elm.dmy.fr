@@ -495,6 +495,7 @@ viewSidebar model =
         [ placeholder "Search"
         , value model.query
         , onInput QueryChanged
+        , size 1
         ]
         []
     , viewSidebarModules model
