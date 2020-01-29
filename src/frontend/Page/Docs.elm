@@ -485,11 +485,11 @@ viewSidebar model =
   div
     [ class "pkg-nav"
     ]
-    [ lazy4 viewReadmeLink model.author model.project model.version model.focus
-    , br [] []
-    , lazy4 viewAboutLink model.author model.project model.version model.focus
-    , br [] []
-    , lazy4 viewBrowseSourceLink model.author model.project model.version model.latest
+    [ ul [ class "pkg-links" ]
+        [ li [] [ lazy4 viewReadmeLink model.author model.project model.version model.focus ]
+        , li [] [ lazy4 viewAboutLink model.author model.project model.version model.focus ]
+        , li [] [ lazy4 viewBrowseSourceLink model.author model.project model.version model.latest ]
+        ]
     , h2 [] [ text "Module Docs" ]
     , input
         [ placeholder "Search"

@@ -400,6 +400,9 @@ Not really any of those on the website though AFAIK.
   }
   .block-list {
     width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
   .pkg-summary h1 {
     flex: 1;
@@ -438,5 +441,31 @@ Not really any of those on the website though AFAIK.
   }
   .spacey-char {
     margin: 0 4px;
+  }
+  .pkg-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pkg-nav h2 {
+    display: none;
+  }
+  .pkg-nav input {
+    margin: 10px 0;
+    width: auto;
+    flex: 1; 
+    min-width: 0;
+  }
+  .pkg-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .pkg-links li {
+    white-space: nowrap;
+  }
+  .pkg-links li:not(:last-child) {
+    margin-right: 10px;
   }
 }
