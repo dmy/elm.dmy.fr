@@ -190,10 +190,16 @@ viewLogo =
             , style "color" "white"
             , style "padding-left" "8px"
             ]
-            [ div [ style "line-height" "20px" ] [ text "elm" ]
+            [ div
+                [ style "line-height" "20px"
+                , style "font-size" "30px"
+                , style "transform" "translateY(-4px)"
+                ]
+                [ text "elm" ]
             , div
                 [ style "line-height" "10px"
-                , style "font-size" "0.5em"
+                , style "font-size" "12px"
+                , style "font-weight" "600"
                 ]
                 [ text "packages" ]
             ]
