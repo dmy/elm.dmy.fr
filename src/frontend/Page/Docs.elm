@@ -490,7 +490,7 @@ viewSidebar model =
         , li [] [ lazy4 viewAboutLink model.author model.project model.version model.focus ]
         , li [] [ lazy4 viewBrowseSourceLink model.author model.project model.version model.latest ]
         ]
-    , h2 [] [ text "Module Docs" ]
+    , h2 [] [ text "Modules" ]
     , input
         [ placeholder "Search"
         , value model.query
@@ -624,10 +624,10 @@ viewBrowseSourceLink author project maybeVersion latest =
           viewBrowseSourceLinkHelp author project version
 
         Loading ->
-          text "Browse Source"
+          text "Source"
 
         Failure ->
-          text "Browse Source"
+          text "Source"
 
 
 viewBrowseSourceLinkHelp : String -> String -> V.Version -> Html msg
@@ -639,7 +639,7 @@ viewBrowseSourceLinkHelp author project version =
         [ author, project, "tree", V.toString version ]
         []
   in
-  a [ href url ] [ text "Browse Source" ]
+  a [ href url ] [ text "Source" ]
 
 
 
