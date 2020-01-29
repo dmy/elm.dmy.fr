@@ -682,7 +682,7 @@ viewAbout manifestStatus timeStatus =
   case manifestStatus of
     Success manifest ->
       div [ class "block-list pkg-about" ]
-        [ h1 [] [ text "Summary" ]
+        [ h1 [ class "block-list-title" ] [ text "About" ]
         , text manifest.summary
         , viewInstall manifest
         , viewRelease manifest timeStatus
