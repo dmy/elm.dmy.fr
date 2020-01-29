@@ -466,6 +466,7 @@ Not really any of those on the website though AFAIK.
   .pkg-nav input {
     margin-top: 10px;
     width: auto;
+    line-height: 32px;
     flex: 1; 
     min-width: 0;
   }
