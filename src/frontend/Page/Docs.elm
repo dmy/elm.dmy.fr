@@ -485,7 +485,7 @@ viewSidebar model =
   div
     [ class "pkg-nav"
     ]
-    [ ul [ class "pkg-links" ]
+    [ ul [ class "pkg-nav-links" ]
         [ li [] [ lazy4 viewReadmeLink model.author model.project model.version model.focus ]
         , li [] [ lazy4 viewAboutLink model.author model.project model.version model.focus ]
         , li [] [ lazy4 viewBrowseSourceLink model.author model.project model.version model.latest ]
@@ -517,7 +517,8 @@ viewSidebarModules model =
           viewEntry docs =
             li [] [ viewModuleLink model docs.name ]
         in
-        ul [] (List.map viewEntry modules)
+        ul [ class "pkg-nav-modules" ]
+          (List.map viewEntry modules)
 
       else
         let

@@ -470,15 +470,28 @@ Not really any of those on the website though AFAIK.
     flex: 1; 
     min-width: 0;
   }
-  .pkg-links {
+  .pkg-nav-links {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  .pkg-links li {
+  .pkg-nav-links li {
     white-space: nowrap;
   }
-  .pkg-links li:not(:last-child) {
+  .pkg-nav-links li:not(:last-child) {
     margin-right: 10px;
   }
+
+  .pkg-nav-modules {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .pkg-nav-modules li {
+    white-space: nowrap;
+    min-width: 150px;
+  }
+  .pkg-nav-modules li:not(:last-child) {
+    margin-right: 20px;
+  }
+
 }
