@@ -72,15 +72,15 @@ pre {
 }
 
 .version-warning {
-  background-color: #1293d8;
   text-align: center;
   margin: 0;
   padding: 4px 0;
-  color: white;
+  color: black;
+  font-weight: bold;
 }
 
 .version-warning a {
-  color: white;
+  color: black;
   text-decoration: underline;
 }
 
