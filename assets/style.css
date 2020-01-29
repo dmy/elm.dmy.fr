@@ -158,6 +158,10 @@ pre {
   font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
   padding-top: 10px;
   padding-bottom: 10px;
+  padding-left: 54px;
+  text-indent: -54px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 
@@ -434,13 +438,8 @@ Not really any of those on the website though AFAIK.
   .docs-header {
     box-sizing: border-box;
     width: calc(100vw - 40px);
-    white-space: pre-wrap;
-    word-break: break-word;
-    padding-left: 54px;
-    text-indent: -54px;
   }
   .block-list h1 {
-    overflow-x: auto;
     width: calc(100vw - 40px);
     overflow-wrap: break-word;
   }
