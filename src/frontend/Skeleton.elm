@@ -109,7 +109,7 @@ view toMsg details =
 viewHeader : List Segment -> Html msg
 viewHeader segments =
   div
-    [ style "background-color" "#1293d8"
+    [ class "header-bar"
     ]
     [ div [class "center"]
         [ h1 [ class "header" ] <|

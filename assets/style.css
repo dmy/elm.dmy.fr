@@ -52,6 +52,15 @@ pre {
   padding: 0 10px;
 }
 
+.header-bar {
+  background-color: #1293d8;
+}
+
+.header-bar .center {
+  /* Cover potential overflow */
+  background-color: #1293d8;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -182,7 +191,7 @@ pre {
 }
 
 .pkg-nav input {
-  width: 200px;
+  width: 100%;
   font-size: 1em;
   padding: 4px;
   margin: 0 -4px 10px -4px;
