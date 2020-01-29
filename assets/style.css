@@ -197,8 +197,8 @@ pre {
 .pkg-nav input {
   width: 100%;
   font-size: 1em;
-  padding: 4px;
-  margin: 0 -4px 10px -4px;
+  padding: 5px;
+  margin: 0 -5px 10px -5px;
   border: 1px solid #eeeeee;
   border-radius: 6px;
 }
@@ -242,14 +242,14 @@ pre {
 
 
 .catalog input {
-  width: 578px;
+  width: 598px;
   font-size: 1.5em;
   padding: 10px;
+  margin: 40px -10px 10px -10px;
   outline: none;
   border: 1px solid #eeeeee;
   border-radius: 8px;
   margin-top: 40px;
-  margin-bottom: 10px;
 }
 
 
@@ -287,7 +287,7 @@ pre {
 
 .pkg-summary-version {
   font-size: 1em;
-  margin: 0.5em 10px 0 10px;
+  margin: 0.5em 0 0 10px;
   color: #bbbbbb;
 }
 
@@ -402,11 +402,12 @@ Not really any of those on the website though AFAIK.
   }
   .catalog form {
     display: flex;
-    margin-right: 10px;
   }
   .catalog input {
     flex: 1;
     width: auto;
+    padding: 10px 5px;
+    margin: 40px -5px 10px -5px;
   }
   .catalog-sidebar {
     display: none;
