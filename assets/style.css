@@ -351,6 +351,10 @@ Not really any of those on the website though AFAIK.
   padding: 0;
 }
 
+.pkg-deps li:first-child {
+  font-weight: 600;
+}
+
 .pkg-constraint {
   white-space: nowrap;
 }
