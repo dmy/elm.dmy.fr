@@ -53,7 +53,10 @@ pre {
 }
 
 .header-bar {
+  min-height: 64px;
   background-color: #1293d8;
+  display: flex;
+  align-items: center;
 }
 
 .header-bar .center {
@@ -377,9 +380,13 @@ Not really any of those on the website though AFAIK.
     flex-wrap: wrap-reverse;
     width: auto;
     box-sizing: border-box;
+    margin: 0;
   }
   .center.pkg-overview {
     display: block;
+  }
+  .header-bar {
+    min-height: 40px;
   }
   .header {
     display: flex;
