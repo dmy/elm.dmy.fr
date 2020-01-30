@@ -236,7 +236,7 @@ viewEntryHelp ({ author, project, summary } as entry) =
   div [ class "pkg-summary" ]
     [ div [ class "pkg-summary-title" ]
         [ h1 []
-            [ a [ href (Href.toVersion author project Nothing) ]
+            [ a [ href (Href.toVersion author project Nothing Nothing) ]
                 [ span [ class "pkg-summary-author" ] [ text (author ++ "/") ]
                 , wbr [] []
                 , span [ class "pkg-summary-project" ] [ text project ]
@@ -257,7 +257,7 @@ viewLatestVersion entry =
     case (latest, Maybe.map V.toTuple latest) of
       (Just version, Just (1, 0, 0)) ->
         [ a
-            [ href (Href.toVersion entry.author entry.project (Just version)) ]
+            [ href (Href.toVersion entry.author entry.project (Just version) Nothing) ]
             [ text (V.toString version) ]
         ]
 
@@ -266,7 +266,7 @@ viewLatestVersion entry =
             [ href (Href.toProject entry.author entry.project) ]
             [ text "… " ]
         , a
-            [ href (Href.toVersion entry.author entry.project (Just version)) ]
+            [ href (Href.toVersion entry.author entry.project (Just version) Nothing) ]
             [ text (V.toString version) ]
         ]
 
@@ -363,9 +363,9 @@ singlePageApp : Html msg
 singlePageApp =
   makeHint
     [ text "All single-page apps in Elm use "
-    , codeLink (Href.toVersion "elm" "browser" Nothing) "elm/browser"
+    , codeLink (Href.toVersion "elm" "browser" Nothing Nothing) "elm/browser"
     , text " to control the URL, with help from "
-    , codeLink (Href.toVersion "elm" "url" Nothing) "elm/url"
+    , codeLink (Href.toVersion "elm" "url" Nothing Nothing) "elm/url"
     , text " convert between URLs and nice structured data. I very highly recommend working through "
     , guide
     , text " to learn how! Once you have made one or two single-page apps the standard way, it will be much easier to tell which (if any) of the packages below can make your code any easier."
@@ -396,7 +396,7 @@ router : Html msg
 router =
   makeHint
     [ text "The "
-    , codeLink (Href.toVersion "elm" "url" Nothing) "elm/url"
+    , codeLink (Href.toVersion "elm" "url" Nothing Nothing) "elm/url"
     , text " package has everything you need to turn paths, queries, and hashes into useful data. But definitely work through "
     , guide
     , text " to learn how this fits into a "

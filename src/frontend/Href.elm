@@ -25,9 +25,9 @@ toProject author project =
   Url.absolute [ "packages", author, project, "" ] []
 
 
-toVersion : String -> String -> Maybe V.Version -> String
-toVersion author project version =
-  Url.absolute [ "packages", author, project, vsnToString version, ""] []
+toVersion : String -> String -> Maybe V.Version -> Maybe String -> String
+toVersion author project version maybeValue =
+  Url.custom Url.Absolute [ "packages", author, project, vsnToString version, ""] [] maybeValue
 
 
 toAbout : String -> String -> Maybe V.Version -> String

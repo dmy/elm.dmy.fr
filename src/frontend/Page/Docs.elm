@@ -61,7 +61,7 @@ type alias Info =
 
 
 type Focus
-  = Readme
+  = Readme (Maybe String)
   | About
   | Module String (Maybe String)
 
@@ -150,15 +150,17 @@ getInfo latest model =
 scrollIfNeeded : Focus -> Cmd Msg
 scrollIfNeeded focus =
   case focus of
-    Module _ (Just tag) ->
-      Task.attempt ScrollAttempted (
-        Dom.getElement tag
-          |> Task.andThen (\info -> Dom.setViewport 0 info.element.y)
-      )
+    Module _ (Just tag) -> scrollToTag tag
+    Readme (Just tag) -> scrollToTag tag
+    _ -> Cmd.none
 
-    _ ->
-      Cmd.none
 
+scrollToTag : String -> Cmd Msg
+scrollToTag tag =
+  Task.attempt ScrollAttempted (
+    Dom.getElement tag
+      |> Task.andThen (\info -> Dom.setViewport 0 info.element.y)
+  )
 
 
 -- UPDATE
@@ -224,7 +226,7 @@ update msg model =
                 | readme = Success readme
                 , session = Session.addReadme model.author model.project version readme model.session
             }
-          , Cmd.none
+          , scrollIfNeeded model.focus
           )
 
     GotDocs version result ->
@@ -281,7 +283,7 @@ view model width =
 toTitle : Model -> String
 toTitle model =
   case model.focus of
-    Readme ->
+    Readme _ ->
       toGenericTitle model
 
     About ->
@@ -326,7 +328,7 @@ toHeader model =
   ]
   ++
     case model.focus of
-      Readme ->
+      Readme _ ->
         []
 
       About ->
@@ -378,8 +380,8 @@ toElmWarning status =
 toNewerUrl : Model -> String
 toNewerUrl model =
   case model.focus of
-    Readme ->
-      Href.toVersion model.author model.project Nothing
+    Readme tag ->
+      Href.toVersion model.author model.project Nothing tag
 
     About ->
       Href.toAbout model.author model.project Nothing
@@ -395,7 +397,7 @@ toNewerUrl model =
 viewContent : Model -> Int -> Html msg
 viewContent model width =
   case model.focus of
-    Readme ->
+    Readme _ ->
       lazy viewReadme model.readme
 
     About ->
@@ -589,9 +591,9 @@ isTagMatch query toResult tipeName (tagName, _) =
 
 viewReadmeLink : String -> String -> Maybe V.Version -> Focus -> Html msg
 viewReadmeLink author project version focus =
-  navLink "README" (Href.toVersion author project version) <|
+  navLink "README" (Href.toVersion author project version Nothing) <|
     case focus of
-      Readme -> True
+      Readme _ -> True
       About -> False
       Module _ _ -> False
 
@@ -604,7 +606,7 @@ viewAboutLink : String -> String -> Maybe V.Version -> Focus -> Html msg
 viewAboutLink author project version focus =
   navLink "About" (Href.toAbout author project version) <|
     case focus of
-      Readme -> False
+      Readme _ -> False
       About -> True
       Module _ _ -> False
 
@@ -655,7 +657,7 @@ viewModuleLink model name =
   in
   navModuleLink name url <|
     case model.focus of
-      Readme ->
+      Readme _ ->
         False
 
       About ->
