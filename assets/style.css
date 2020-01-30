@@ -205,7 +205,7 @@ pre {
   line-height: 1.5em;
 
   position: sticky;
-  max-height: calc(100vh - 64px);
+  max-height: calc(100vh - 128px);
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
