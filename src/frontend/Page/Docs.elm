@@ -430,17 +430,18 @@ viewReadme status =
 
 viewModule : String -> String -> Maybe V.Version -> String -> Status (List Docs.Module) -> Int -> Html msg
 viewModule author project version name status width =
+  let
+    breakableName =
+      name
+        |> String.split "."
+        |> List.map text
+        |> List.intersperse (span [] [ text ".", wbr [] [] ])
+  in
   case status of
     Success allDocs ->
       case findModule name allDocs of
         Just docs ->
           let
-            breakableName =
-              name
-                |> String.split "."
-                |> List.map text
-                |> List.intersperse (span [] [ text ".", wbr [] [] ])
-
             header = h1 [class "block-list-title"] breakableName
             info = Block.makeInfo author project version name allDocs width
             blocks = List.map (Block.view info) (Docs.toBlocks docs)
@@ -454,7 +455,7 @@ viewModule author project version name status width =
 
     Loading ->
       div [ class "block-list" ]
-        [ h1 [class "block-list-title"] [ text name ] -- TODO better loading
+        [ h1 [class "block-list-title"] breakableName -- TODO better loading
         ]
 
     Failure ->
