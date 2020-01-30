@@ -256,6 +256,15 @@ pre {
 
 
 
+/* PACKAGE VERSIONS OVERVIEW */
+
+
+.center.pkg-overview {
+  display: block;
+}
+
+
+
 /* CATALOG */
 
 
@@ -406,9 +415,6 @@ Not really any of those on the website though AFAIK.
   }
   .page-margin {
     display: none;
-  }
-  .center.pkg-overview {
-    display: block;
   }
   .header-bar {
     min-height: 40px;
