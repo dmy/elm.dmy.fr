@@ -93,10 +93,16 @@ view toMsg details =
   { title =
       details.title
   , body =
-      [ viewHeader details.header
-      , lazy viewWarning details.warning
-      , Html.map toMsg <|
-          div (class "center" :: details.attrs) details.kids
+      [ div [ class "page" ]
+        [ div [ class "page-margin" ] []
+        , div [ class "content" ]
+            [ viewHeader details.header
+            , lazy viewWarning details.warning
+            , Html.map toMsg <|
+                div (class "center" :: details.attrs) details.kids
+            ]
+        , div [ class "page-margin" ] []
+        ]
       , viewFooter
       ]
   }

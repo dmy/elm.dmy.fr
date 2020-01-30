@@ -8,7 +8,8 @@ html, head, body {
 body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   color: #293c4b;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 h1, h2, h3, h4 {
@@ -41,16 +42,32 @@ pre {
   overflow-x: auto;
 }
 
+/* PAGE */
 
+.page {
+  display: flex;
+  flex: 1;
+}
+
+.page-margin {
+  flex: 1;
+  height: 64px;
+  background-color: #1293d8;
+}
+
+.content {
+  flex: 1;
+}
 
 /* HEADER */
 
 
 .center {
-  width: 860px;
-  margin-left: auto;
-  margin-right: auto;
+  box-sizing: border-box;
+  min-width: 900px;
   padding: 0 10px;
+  margin: 0 10px;
+  display: flex;
 }
 
 .header-bar {
@@ -131,7 +148,6 @@ pre {
 
 .block-list {
   width: 600px;
-  display: inline-block;
   vertical-align: top;
 }
 
@@ -181,13 +197,10 @@ pre {
 
 
 .pkg-nav {
-  width: 140px;
-  display: inline-block;
   top: 0px;
   vertical-align: top;
   padding: 20px;
-  margin: 20px -300px 20px 40px;
-  padding-right: 300px;
+  margin: 20px 20px 20px 40px;
   border-left: 1px solid #eeeeee;
   line-height: 1.5em;
 
@@ -207,7 +220,7 @@ pre {
 }
 
 .pkg-nav input {
-  width: 100%;
+  width: 140px;
   font-size: 1em;
   padding: 5px;
   margin: 0 -5px 10px -5px;
@@ -290,10 +303,6 @@ pre {
   margin: 0;
   font-size: 1.5em;
   display: inline-block;
-}
-
-.pkg-summary-project {
-  /*white-space: nowrap;*/
 }
 
 .pkg-summary-desc {
@@ -389,11 +398,14 @@ Not really any of those on the website though AFAIK.
 
 @media screen and (max-width: 768px) {
   .center {
+    min-width: 0;
     display: flex;
     flex-wrap: wrap-reverse;
-    width: auto;
     box-sizing: border-box;
     margin: 0;
+  }
+  .page-margin {
+    display: none;
   }
   .center.pkg-overview {
     display: block;

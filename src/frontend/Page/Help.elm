@@ -75,12 +75,13 @@ view model =
 
 viewContent : String -> Content -> Html msg
 viewContent title content =
-  case content of
-    Failure ->
-      text "" -- TODO
+  div [ class "block-list" ] <|
+    case content of
+      Failure ->
+        [ text "" ]-- TODO
 
-    Loading ->
-      h1 [ style "max-width" "600px" ] [ text title ]
+      Loading ->
+        [ h1 [] [ text title ] ]
 
-    Success help ->
-      Markdown.toHtml [ style "max-width" "600px" ] help
+      Success help ->
+        [ Markdown.toHtml [] help ]
