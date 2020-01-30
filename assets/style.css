@@ -252,9 +252,12 @@ pre {
   vertical-align: top;
 }
 
+.catalog form {
+  display: flex;
+  flex-direction: column;
+}
 
 .catalog input {
-  width: 598px;
   font-size: 1.5em;
   padding: 10px;
   margin: 40px -10px 10px -10px;
@@ -415,9 +418,6 @@ Not really any of those on the website though AFAIK.
     flex: 1;
     width: auto;
     display: block;
-  }
-  .catalog form {
-    display: flex;
   }
   .catalog input {
     flex: 1;
