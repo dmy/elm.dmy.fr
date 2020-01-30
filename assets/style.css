@@ -8,6 +8,7 @@ html, head, body {
 body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   color: #293c4b;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -182,13 +183,23 @@ pre {
 .pkg-nav {
   width: 200px;
   display: inline-block;
-  position: sticky;
   top: 0px;
   vertical-align: top;
   padding: 20px;
-  margin: 20px 20px 20px 40px;
+  margin: 20px -300px 20px 40px;
+  padding-right: 300px;
   border-left: 1px solid #eeeeee;
   line-height: 1.5em;
+
+  position: sticky;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pkg-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .pkg-nav h2 {
@@ -461,6 +472,10 @@ Not really any of those on the website though AFAIK.
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
+    position: static;
+    max-height: initial;
+    overflow: visible;
   }
   .pkg-nav h2 {
     display: none;
