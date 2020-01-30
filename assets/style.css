@@ -68,6 +68,7 @@ pre {
   padding: 0 10px;
   margin: 0 10px;
   display: flex;
+  align-items: flex-start;
 }
 
 .header-bar {
@@ -199,16 +200,20 @@ pre {
 .pkg-nav {
   top: 0px;
   vertical-align: top;
-  padding: 20px;
+  padding: 20px 20px 0 20px;
   margin: 20px 20px 20px 40px;
   border-left: 1px solid #eeeeee;
   line-height: 1.5em;
 
   position: sticky;
-  max-height: calc(100vh - 128px);
+  max-height: calc(100vh - 108px);
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.pkg-nav ul.pkg-nav-modules {
+  margin-bottom: 20px;
 }
 
 .pkg-nav::-webkit-scrollbar {
@@ -461,12 +466,6 @@ Not really any of those on the website though AFAIK.
   .pkg-summary-desc {
     clear: right;
   }
-  .pkg-nav {
-    position: static;
-    border: 0;
-    padding: 0;
-    margin: 0.5em 0 0 0;
-  }
   .docs-header {
     box-sizing: border-box;
     width: calc(100vw - 40px);
@@ -487,12 +486,16 @@ Not really any of those on the website though AFAIK.
     margin: 0 4px;
   }
   .pkg-nav {
+    position: static;
+    border: 0;
+    padding: 0;
+    margin: 0.5em 0 0 0;
+
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 
-    position: static;
     max-height: initial;
     overflow: visible;
   }
