@@ -47,7 +47,7 @@ pre {
 
 
 .center {
-  width: 920px;
+  width: 860px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 10px;
@@ -181,7 +181,7 @@ pre {
 
 
 .pkg-nav {
-  width: 200px;
+  width: 140px;
   display: inline-block;
   top: 0px;
   vertical-align: top;
@@ -313,7 +313,7 @@ pre {
 
 
 .catalog-sidebar {
-  width: 200px;
+  width: 140px;
   display: inline-block;
   position: sticky;
   top: 0px;
