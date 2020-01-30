@@ -767,9 +767,9 @@ viewTime manifest timeStatus =
         [ text <|
             String.concat
               [ monthToString (Time.toMonth Time.utc time)
-              , ", "
-              , String.fromInt (Time.toDay Time.utc time)
               , " "
+              , String.fromInt (Time.toDay Time.utc time)
+              , ", "
               , String.fromInt (Time.toYear Time.utc time)
               ]
         ]
