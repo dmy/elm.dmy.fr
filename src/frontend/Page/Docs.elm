@@ -195,6 +195,7 @@ update msg model =
                 | latest = Failure
                 , readme = Failure
                 , docs = Failure
+                , manifest = Failure
             }
           , Cmd.none
           )
