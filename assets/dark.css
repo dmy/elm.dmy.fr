@@ -1,0 +1,83 @@
+html, head, body {
+  background-color: black;
+}
+
+body {
+  color: #d6c3b4;
+}
+
+.logo-text {
+  color: black !important;
+}
+
+.header-bar svg {
+  fill: black;
+}
+
+.header {
+  color: black;
+}
+
+.header > a {
+  color: black;
+}
+
+pre {
+  background-color: black;
+  border-color: #222222;
+}
+
+input {
+  background-color: black;
+  border-color: #222222 !important;
+  color: #d6c3b4;
+}
+
+input::placeholder {
+  color: #888888;
+}
+
+a {
+  color: #5FABDC; 
+}
+
+a .pkg-summary-author { 
+  color: #1293d8;
+}
+
+.footer {
+  color: #444444;
+  border-color: #222222;
+}
+
+.grey-link {
+  color: #444444;
+}
+
+.pkg-summary {
+  border-color: #222222;
+}
+
+.pkg-hint {
+  background-color: black;
+}
+
+.catalog-sidebar {
+  border-color: #222222;
+}
+
+.version-warning {
+  color: white;
+}
+
+.version-warning a {
+  color: white;
+}
+
+.pkg-nav {
+  border-color: #222222;
+}
+
+.docs-block {
+  border-color: #222222;
+}
