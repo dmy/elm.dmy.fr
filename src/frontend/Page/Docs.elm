@@ -151,8 +151,15 @@ scrollIfNeeded : Focus -> Cmd Msg
 scrollIfNeeded focus =
   case focus of
     Module _ (Just tag) -> scrollToTag tag
+    Module _ Nothing -> scrollToTop
     Readme (Just tag) -> scrollToTag tag
-    _ -> Cmd.none
+    Readme Nothing -> scrollToTop
+    About -> Cmd.none
+
+
+scrollToTop : Cmd Msg
+scrollToTop =
+  Task.attempt ScrollAttempted (Dom.setViewport 0 0)
 
 
 scrollToTag : String -> Cmd Msg
@@ -161,6 +168,7 @@ scrollToTag tag =
     Dom.getElement tag
       |> Task.andThen (\info -> Dom.setViewport 0 info.element.y)
   )
+
 
 
 -- UPDATE
