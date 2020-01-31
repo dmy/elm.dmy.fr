@@ -347,13 +347,13 @@ pre {
   padding: 20px;
   margin: 20px 20px 20px 40px;
   border-left: 1px solid #eeeeee;
+  white-space: nowrap;
 }
 
 .catalog-sidebar h2 {
   font-size: 1.5em;
   padding: 10px;
   margin: 0;
-  white-space: nowrap;
 }
 
 .catalog-sidebar ul {
