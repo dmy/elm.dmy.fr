@@ -24,12 +24,12 @@ body {
 
 pre {
   background-color: black;
-  border-color: #222222;
+  border-color: #111111;
 }
 
 input {
   background-color: black;
-  border-color: #222222 !important;
+  border-color: #111111 !important;
   color: #d6c3b4;
 }
 
