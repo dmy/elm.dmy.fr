@@ -190,6 +190,10 @@ pre {
   align-items: stretch;
 }
 
+.docs-comment div {
+  min-width: 0;
+}
+
 .docs-comment img {
   max-width: 100%;
 }
