@@ -186,11 +186,18 @@ pre {
 
 .docs-comment {
   overflow: hidden;
-  padding-left: 36px;
+  display: flex;
+  align-items: stretch;
 }
 
 .docs-comment img {
   max-width: 100%;
+}
+
+.docs-comment .permalink {
+  display: block;
+  flex: 0 0 36px;
+  outline: 0;
 }
 
 

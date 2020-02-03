@@ -57,11 +57,18 @@ view info block =
         ]
 
 
-viewCodeBlock : String -> String -> List (Line msg) -> Html msg
-viewCodeBlock name comment header =
+viewCodeBlock : Info -> String -> String -> List (Line msg) -> Html msg
+viewCodeBlock {author, project, version, moduleName} name comment header =
+  let
+    url =
+      Href.toModule author project version moduleName (Just name)
+  in
   div [ class "docs-block", id name ]
     [ div [ class "docs-header" ] (List.map (div []) header)
-    , div [ class "docs-comment" ] [ Markdown.block comment ]
+    , div [ class "docs-comment" ]
+        [ a [ href url, class "permalink" ] [ text "" ]
+        , Markdown.block comment
+        ]
     ]
 
 
@@ -76,7 +83,7 @@ viewValue info { name, comment, tipe } =
       toBoldLink info name
 
   in
-  viewCodeBlock name comment <|
+  viewCodeBlock info name comment <|
     case toLines info Other (String.length name + 3) tipe of
       One _ line ->
         [ nameHtml :: space :: colon :: space :: line ]
@@ -100,7 +107,7 @@ viewBinop info { name, comment, tipe } =
     nameHtml =
       makeLink info [bold] name ("(" ++ name ++ ")")
   in
-  viewCodeBlock name comment <|
+  viewCodeBlock info name comment <|
     case toLines info Other (String.length name + 3) tipe of
       One _ line ->
         [ nameHtml :: space :: colon :: space :: line ]
@@ -125,7 +132,7 @@ viewAlias info { name, args, comment, tipe } =
       , equals
       ]
   in
-  viewCodeBlock name comment <|
+  viewCodeBlock info name comment <|
     aliasNameLine :: List.map indentFour (linesToList (toLines info Other 4 tipe))
 
 
@@ -142,7 +149,7 @@ viewUnion info {name, comment, args, tags} =
     nameLine =
       [ keyword "type", space, toBoldLink info name, text varsString ]
   in
-  viewCodeBlock name comment <|
+  viewCodeBlock info name comment <|
     case tags of
       [] ->
         [ nameLine ]
