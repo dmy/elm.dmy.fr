@@ -224,7 +224,7 @@ toBoldLink : Info -> String -> String -> Html msg
 toBoldLink {author, project, version, moduleName} name humanName =
   let
     url =
-      Href.toSource author project version moduleName (Just name)
+      Href.toModuleWithSource author project version moduleName (Just name)
   in
   a [ href url, bold ] [ text humanName ]
 

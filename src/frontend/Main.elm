@@ -227,7 +227,7 @@ findGithubSource data author project maybeVersion moduleName maybeTag =
           Nothing -> Session.getLatestVersion data author project
 
     modulePath =
-      String.replace "-" "/" moduleName
+      String.replace "." "/" moduleName
   in
   case (semanticVersion, maybeTag) of
     (Just version, Just tag) ->
@@ -300,22 +300,23 @@ stepUrl url model =
             (\author project ->
                 stepDiff model (Diff.init session author project)
             )
-        , route (s "packages" </> author_ </> project_ </> version_ </> focus_)
-            (\author project version focus ->
-                stepDocs model (Docs.init session author project version focus)
-            )
-        , route (s "source" </> author_ </> project_ </> version_ </> module_ </> fragment identity)
-            (\author project version moduleName tag ->
-                let
-                  (newModel, cmd) =
-                    stepDocs model (Docs.init session author project version (Docs.Module moduleName tag))
-                in
-                  ( newModel
-                  , Cmd.batch
-                      [ Nav.replaceUrl model.key (String.replace "/source/" "/packages/" (Url.toString url))
-                      , findGithubSource session author project version moduleName tag
-                      ]
-                  )
+        , route (s "packages" </> author_ </> project_ </> version_ </> focus_ <?> source_)
+            (\author project version focus source ->
+                case (focus, source) of
+                  (Docs.Module moduleName tag, Just _) ->
+                   let
+                     (newModel, cmd) =
+                       stepDocs model (Docs.init session author project version (Docs.Module moduleName tag))
+                   in
+                     ( newModel
+                     , Cmd.batch
+                         [ Nav.replaceUrl model.key (Url.toString { url | query = Nothing })
+                         , findGithubSource session author project version moduleName tag
+                         ]
+                     )
+
+                  _ ->
+                    stepDocs model (Docs.init session author project version focus)
             )
         , route (s "help" </> s "design-guidelines")
             (stepHelp model (Help.init session "Design Guidelines" "/assets/help/design-guidelines.md"))
@@ -356,9 +357,11 @@ version_ =
     else
       Maybe.map Just (V.fromString string)
 
+
 module_ : Parser (String -> a) a
 module_ =
   custom "MODULE" Just
+
 
 focus_ : Parser (Docs.Focus -> a) a
 focus_ =
@@ -367,6 +370,11 @@ focus_ =
     , map Docs.About (s "about")
     , map Docs.Module (moduleName_ </> fragment identity)
     ]
+
+
+source_ : Query.Parser (Maybe String)
+source_ =
+  Query.string "source"
 
 
 moduleName_ : Parser (String -> a) a

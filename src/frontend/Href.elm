@@ -4,7 +4,7 @@ module Href exposing
   , toVersion
   , toAbout
   , toModule
-  , toSource
+  , toModuleWithSource
   )
 
 
@@ -38,12 +38,21 @@ toAbout author project version =
 
 toModule : String -> String -> Maybe V.Version -> String -> Maybe String -> String
 toModule author project version moduleName maybeValue =
-  Url.custom Url.Absolute [ "packages", author, project, vsnToString version, String.replace "." "-" moduleName ] [] maybeValue
+  Url.custom Url.Absolute
+    [ "packages" , author , project , vsnToString version , String.replace "." "-" moduleName ] [] maybeValue
 
 
-toSource : String -> String -> Maybe V.Version -> String -> Maybe String -> String
-toSource author project version moduleName maybeValue =
-  Url.custom Url.Absolute [ "source", author, project, vsnToString version, String.replace "." "-" moduleName ] [] maybeValue
+toModuleWithSource : String -> String -> Maybe V.Version -> String -> Maybe String -> String
+toModuleWithSource author project version moduleName maybeValue =
+  Url.custom Url.Absolute
+    [ "packages"
+    , author
+    , project
+    , vsnToString version
+    , String.replace "." "-" moduleName
+    ]
+    [ Url.string "source" "" ]
+    maybeValue
 
 
 
