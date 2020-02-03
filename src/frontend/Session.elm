@@ -4,6 +4,7 @@ module Session exposing
   , getEntries
   , addEntries
   , getReleases
+  , getLatestVersion
   , addReleases
   , fetchReleases
   , getReadme
@@ -80,6 +81,10 @@ getReleases : Data -> String -> String -> Maybe (OneOrMore Release.Release)
 getReleases data author project =
   Dict.get (toPkgKey author project) data.releases
 
+
+getLatestVersion : Data -> String -> String -> Maybe V.Version
+getLatestVersion data author project =
+  Maybe.map Release.getLatestVersion (getReleases data author project)
 
 addReleases : String -> String -> OneOrMore Release.Release -> Data -> Data
 addReleases author project releases data =

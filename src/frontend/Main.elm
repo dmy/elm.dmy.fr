@@ -7,6 +7,7 @@ import Browser.Events
 import Dict
 import Elm.Version as V
 import Html
+import Http
 import Page.Docs as Docs
 import Page.Diff as Diff
 import Page.Help as Help
@@ -14,9 +15,12 @@ import Page.Problem as Problem
 import Page.Search as Search
 import Session
 import Skeleton
+import Task
 import Url
+import Url.Builder
 import Url.Parser as Parser exposing (Parser, (</>), (<?>), custom, fragment, map, oneOf, s, top)
 import Url.Parser.Query as Query
+import Utils.Source as Source
 
 
 
@@ -117,6 +121,7 @@ type Msg
   | DocsMsg Docs.Msg
   | HelpMsg Help.Msg
   | WindowResized Int Int
+  | GotModuleSource String String String String String (Result Http.Error String)
 
 
 
@@ -167,6 +172,18 @@ update message model =
       , Cmd.none
       )
 
+    GotModuleSource author project version moduleName tag result ->
+      case result of
+        Ok code ->
+          ( model
+          , loadGithubSource author project version moduleName tag code
+          )
+
+        Err _ ->
+          ( model
+          , Cmd.none
+          )
+
 
 stepSearch : Model -> ( Search.Model, Cmd Search.Msg ) -> ( Model, Cmd Msg )
 stepSearch model (search, cmds) =
@@ -194,6 +211,55 @@ stepHelp model (help, cmds) =
   ( { model | page = Help help }
   , Cmd.map HelpMsg cmds
   )
+
+
+
+-- GITHUB SOURCE
+
+
+findGithubSource : Session.Data -> String -> String -> Maybe V.Version -> String -> Maybe String -> Cmd Msg
+findGithubSource data author project maybeVersion moduleName maybeTag =
+  let
+    semanticVersion =
+      Maybe.map V.toString <|
+        case maybeVersion of
+          Just version -> Just version
+          Nothing -> Session.getLatestVersion data author project
+
+    modulePath =
+      String.replace "-" "/" moduleName
+  in
+  case (semanticVersion, maybeTag) of
+    (Just version, Just tag) ->
+      Http.send (GotModuleSource author project version modulePath tag) <|
+        Http.getString <|
+          Url.Builder.crossOrigin "https://raw.githubusercontent.com" 
+            [ author , project , version , "src" , modulePath ++ ".elm" ]
+            []
+
+    _ ->
+      Cmd.none
+
+
+loadGithubSource : String -> String -> String -> String -> String -> String -> Cmd msg
+loadGithubSource author project version moduleName tag code =
+  let
+    lineNumber =
+      Source.findLine tag code
+        |> Maybe.withDefault 1 
+        |> String.fromInt
+  in
+  Nav.load <|
+    Url.Builder.custom (Url.Builder.CrossOrigin "https://github.com")
+      [ author
+      , project
+      , "blob"
+      , version
+      , "src"
+      , moduleName ++ ".elm"
+      ]
+      []
+      (Just ("L" ++ lineNumber))
 
 
 
@@ -238,6 +304,19 @@ stepUrl url model =
             (\author project version focus ->
                 stepDocs model (Docs.init session author project version focus)
             )
+        , route (s "source" </> author_ </> project_ </> version_ </> module_ </> fragment identity)
+            (\author project version moduleName tag ->
+                let
+                  (newModel, cmd) =
+                    stepDocs model (Docs.init session author project version (Docs.Module moduleName tag))
+                in
+                  ( newModel
+                  , Cmd.batch
+                      [ Nav.replaceUrl model.key (String.replace "/source/" "/packages/" (Url.toString url))
+                      , findGithubSource session author project version moduleName tag
+                      ]
+                  )
+            )
         , route (s "help" </> s "design-guidelines")
             (stepHelp model (Help.init session "Design Guidelines" "/assets/help/design-guidelines.md"))
         , route (s "help" </> s "documentation-format")
@@ -277,6 +356,9 @@ version_ =
     else
       Maybe.map Just (V.fromString string)
 
+module_ : Parser (String -> a) a
+module_ =
+  custom "MODULE" Just
 
 focus_ : Parser (Docs.Focus -> a) a
 focus_ =

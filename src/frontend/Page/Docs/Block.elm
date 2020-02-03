@@ -80,7 +80,7 @@ viewValue : Info -> Docs.Value -> Html msg
 viewValue info { name, comment, tipe } =
   let
     nameHtml =
-      toBoldLink info name
+      toBoldLink info name name
 
   in
   viewCodeBlock info name comment <|
@@ -105,7 +105,7 @@ viewBinop : Info -> Docs.Binop -> Html msg
 viewBinop info { name, comment, tipe } =
   let
     nameHtml =
-      makeLink info [bold] name ("(" ++ name ++ ")")
+      toBoldLink info name ("(" ++ name ++ ")")
   in
   viewCodeBlock info name comment <|
     case toLines info Other (String.length name + 3) tipe of
@@ -128,7 +128,7 @@ viewAlias info { name, args, comment, tipe } =
 
     aliasNameLine =
       [ keyword "type", space, keyword "alias", space
-      , toBoldLink info name, text varsString, space
+      , toBoldLink info name name, text varsString, space
       , equals
       ]
   in
@@ -147,7 +147,7 @@ viewUnion info {name, comment, args, tags} =
       String.concat <| List.map ((++) " ") args
 
     nameLine =
-      [ keyword "type", space, toBoldLink info name, text varsString ]
+      [ keyword "type", space, toBoldLink info name name, text varsString ]
   in
   viewCodeBlock info name comment <|
     case tags of
@@ -220,9 +220,13 @@ makeInfo author project version moduleName docsList width =
 -- CREATE LINKS
 
 
-toBoldLink : Info -> String -> Html msg
-toBoldLink info name =
-  makeLink info [bold] name name
+toBoldLink : Info -> String -> String -> Html msg
+toBoldLink {author, project, version, moduleName} name humanName =
+  let
+    url =
+      Href.toSource author project version moduleName (Just name)
+  in
+  a [ href url, bold ] [ text humanName ]
 
 
 bold : Attribute msg
