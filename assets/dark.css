@@ -24,12 +24,12 @@ body {
 
 pre {
   background-color: black;
-  border-color: #111111;
+  border-color: #222222;
 }
 
 input {
   background-color: black;
-  border-color: #111111 !important;
+  border-color: #222222 !important;
   color: #d6c3b4;
 }
 
@@ -47,7 +47,7 @@ a .pkg-summary-author {
 
 .footer {
   color: #444444;
-  border-color: #222222;
+  border-color: #333333;
 }
 
 .grey-link {
@@ -55,7 +55,7 @@ a .pkg-summary-author {
 }
 
 .pkg-summary {
-  border-color: #222222;
+  border-color: #333333;
 }
 
 .pkg-hint {
@@ -63,7 +63,7 @@ a .pkg-summary-author {
 }
 
 .catalog-sidebar {
-  border-color: #222222;
+  border-color: #333333;
 }
 
 .version-warning {
@@ -75,11 +75,11 @@ a .pkg-summary-author {
 }
 
 .pkg-nav {
-  border-color: #222222;
+  border-color: #333333;
 }
 
 .docs-block {
-  border-color: #222222;
+  border-color: #333333;
 }
 
 :not(pre) > code {
