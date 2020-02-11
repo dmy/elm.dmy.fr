@@ -770,7 +770,13 @@ viewTime manifest timeStatus =
     Success time ->
       let
         releasesUrl =
-          Url.crossOrigin "https://github.com" [ Package.toString manifest.name, "releases" ] []
+          Url.crossOrigin "https://github.com"
+            [ Package.toString manifest.name
+            , "releases"
+            , "tag"
+            , V.toString manifest.version
+            ]
+            []
       in
       a [ href releasesUrl ]
         [ text <|
