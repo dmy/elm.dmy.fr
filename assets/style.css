@@ -11,7 +11,7 @@ body {
   flex-direction: column;
   min-height: 100%;
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
-  color: #293c4b;
+  color: #000e16;
 }
 
 h1, h2, h3, h4 {
@@ -54,7 +54,7 @@ pre {
 .page-margin {
   flex: 1;
   height: 64px;
-  background-color: #1293d8;
+  background-color: #5FABDC;
 }
 
 .content {
@@ -75,14 +75,14 @@ pre {
 
 .header-bar {
   min-height: 64px;
-  background-color: #1293d8;
+  background-color: #5FABDC;
   display: flex;
   align-items: center;
 }
 
 .header-bar .center {
   /* Cover potential overflow */
-  background-color: #1293d8;
+  background-color: #5FABDC;
 }
 
 .header {
