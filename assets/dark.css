@@ -1,4 +1,6 @@
-html, head, body {
+html,
+head,
+body {
   background-color: black;
 }
 
@@ -18,7 +20,7 @@ body {
   color: black;
 }
 
-.header > a {
+.header>a {
   color: black;
 }
 
@@ -38,10 +40,10 @@ input::placeholder {
 }
 
 a {
-  color: #5FABDC; 
+  color: #5FABDC;
 }
 
-a .pkg-summary-author { 
+a .pkg-summary-author {
   color: #1293d8;
 }
 
@@ -82,6 +84,6 @@ a .pkg-summary-author {
   border-color: #333333;
 }
 
-:not(pre) > code {
+:not(pre)>code {
   background-color: rgba(255, 255, 255, 0.04);
 }

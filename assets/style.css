@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic,700italic|Source+Code+Pro:400,700);
 
-html, head {
+html,
+head {
   margin: 0;
   height: 100%;
 }
@@ -14,11 +15,15 @@ body {
   color: #000e16;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: normal;
 }
 
-p, li {
+p,
+li {
   line-height: 1.5em;
 }
 
@@ -26,20 +31,27 @@ a {
   color: #1293d8;
   text-decoration: none;
 }
+
 a:hover {
-  color: rgb(234,21,122);
+  color: rgb(234, 21, 122);
   text-decoration: underline;
 }
-a .pkg-summary-author { color: #5FABDC; }
-a:hover .pkg-summary-author { color: rgb(234,21,122); }
+
+a .pkg-summary-author {
+  color: #5FABDC;
+}
+
+a:hover .pkg-summary-author {
+  color: rgb(234, 21, 122);
+}
 
 pre {
   margin: 0;
   padding: 10px;
-  background-color: rgb(254,254,254);
+  background-color: rgb(254, 254, 254);
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(245,245,245);
+  border-color: rgb(245, 245, 245);
   border-radius: 6px;
   overflow-x: auto;
 }
@@ -96,11 +108,11 @@ pre {
   white-space: nowrap;
 }
 
-.header > a {
+.header>a {
   color: white;
 }
 
-.header > a:first-of-type {
+.header>a:first-of-type {
   margin-right: 20px;
 }
 
@@ -159,7 +171,7 @@ pre {
 }
 
 .block-list img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .markdown-block h1 {
@@ -388,17 +400,18 @@ code {
 /* I heard using :not() is slow for reflows.
 Not really any of those on the website though AFAIK.
 */
-:not(pre) > code {
+:not(pre)>code {
   padding: 0;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   margin: 0;
   font-size: 85%;
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgba(0, 0, 0, 0.04);
   border-radius: 3px;
 }
 
-:not(pre) > code::before, :not(pre) > code::after {
+:not(pre)>code::before,
+:not(pre)>code::after {
   letter-spacing: -0.2em;
   content: "\00a0";
 }
@@ -427,73 +440,91 @@ Not really any of those on the website though AFAIK.
     box-sizing: border-box;
     margin: 0;
   }
+
   .page-margin {
     display: none;
   }
+
   .header-bar {
     min-height: 40px;
   }
+
   .header {
     display: flex;
     flex-wrap: wrap;
     font-size: 20px;
   }
-  .header > a:first-of-type {
+
+  .header>a:first-of-type {
     margin-right: 10px;
   }
+
   .header .logo-text {
     display: none;
   }
+
   .footer {
     padding: 10px;
   }
+
   .catalog {
     flex: 1;
     width: auto;
     display: block;
   }
+
   .catalog input {
     flex: 1;
     width: auto;
     padding: 10px 5px;
     margin: 40px -5px 10px -5px;
   }
+
   .catalog-sidebar {
     display: none;
   }
+
   .block-list {
     width: auto;
     display: flex;
     flex-direction: column;
     align-items: stretch;
   }
+
   .pkg-summary h1 {
     flex: 1;
     overflow-wrap: anywhere;
     display: inline-block;
   }
+
   .pkg-summary-desc {
     clear: right;
   }
+
   .docs-header {
     box-sizing: border-box;
     width: calc(100vw - 40px);
   }
+
   .block-list h1 {
     width: calc(100vw - 40px);
     overflow-wrap: break-word;
   }
+
   .block-list pre {
     box-sizing: border-box;
     width: calc(100vw - 40px);
   }
+
   .docs-comment pre {
     box-sizing: border-box;
     width: calc(100vw - 40px - 36px);
   }
+
   .spacey-char {
     margin: 0 4px;
   }
+
   .pkg-nav {
     position: static;
     border: 0;
@@ -508,24 +539,29 @@ Not really any of those on the website though AFAIK.
     max-height: initial;
     overflow: visible;
   }
+
   .pkg-nav h2 {
     display: none;
   }
+
   .pkg-nav input {
     margin-top: 10px;
     width: auto;
     line-height: 32px;
-    flex: 1; 
+    flex: 1;
     min-width: 0;
   }
+
   .pkg-nav-links {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
+
   .pkg-nav-links li {
     white-space: nowrap;
   }
+
   .pkg-nav-links li:not(:last-child) {
     margin-right: 10px;
   }
@@ -534,10 +570,12 @@ Not really any of those on the website though AFAIK.
     display: flex;
     flex-wrap: wrap;
   }
+
   .pkg-nav-modules li {
     white-space: nowrap;
     min-width: 150px;
   }
+
   .pkg-nav-modules li:not(:last-child) {
     margin-right: 20px;
   }
