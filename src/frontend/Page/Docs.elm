@@ -694,7 +694,7 @@ viewAbout manifestStatus timeStatus =
   case manifestStatus of
     Success manifest ->
       div [ class "block-list pkg-about" ]
-        [ h1 [ class "block-list-title" ] [ text "About" ]
+        [ h1 [] [ text "About" ]
         , text manifest.summary
         , viewInstall manifest
         , viewRelease manifest timeStatus
@@ -728,7 +728,7 @@ viewInstall manifest =
 viewInstallHelp : String -> String -> Html msg
 viewInstallHelp command package =
   div []
-    [ h1 [] [ text "Install" ]
+    [ h2 [] [ text "Install" ]
     , pre []
       [ code [] [ text (command ++ " " ++ package) ]
       ]
@@ -738,7 +738,7 @@ viewInstallHelp command package =
 viewRelease : Project.PackageInfo -> Status Time.Posix -> Html msg
 viewRelease manifest timeStatus =
   div []
-    [ h1 [] [ text "Release" ]
+    [ h2 [] [ text "Release" ]
     , viewTime manifest timeStatus
     ]
 
@@ -753,7 +753,7 @@ viewLicense manifest =
         []
   in
   div []
-    [ h1 [] [ text "License" ]
+    [ h2 [] [ text "License" ]
     , a [ href licenseUrl ] [ text (License.toString manifest.license) ]
     ]
 
@@ -814,7 +814,7 @@ monthToString month =
 viewDependencies : Project.PackageInfo -> Html msg
 viewDependencies manifest =
   div [ class "pkg-deps" ]
-    [ h1 [] [ text "Dependencies" ]
+    [ h2 [] [ text "Dependencies" ]
     , ul [] <|
         li [] [ viewElmDependency manifest.elm ]
           :: (manifest.deps |> List.map viewDependency)
