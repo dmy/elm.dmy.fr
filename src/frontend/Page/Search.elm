@@ -250,28 +250,23 @@ viewEntryHelp ({ author, project, summary } as entry) =
 
 viewLatestVersion : Entry -> Html msg
 viewLatestVersion entry =
-  let
-    latest = List.head (List.reverse entry.versions)
-  in
   div [ class "pkg-summary-version" ] <|
-    case (latest, Maybe.map V.toTuple latest) of
-      (Just version, Just (1, 0, 0)) ->
+    case V.toTuple entry.version of
+      (1, 0, 0) ->
         [ a
-            [ href (Href.toVersion entry.author entry.project (Just version) Nothing) ]
-            [ text (V.toString version) ]
+            [ href (Href.toVersion entry.author entry.project (Just entry.version) Nothing) ]
+            [ text (V.toString entry.version) ]
         ]
 
-      (Just version, _) ->
+      _ ->
         [ a
             [ href (Href.toProject entry.author entry.project) ]
             [ text "… " ]
         , a
-            [ href (Href.toVersion entry.author entry.project (Just version) Nothing) ]
-            [ text (V.toString version) ]
+            [ href (Href.toVersion entry.author entry.project (Just entry.version) Nothing) ]
+            [ text (V.toString entry.version) ]
         ]
 
-      (Nothing, _) ->
-        []
 
 
 
