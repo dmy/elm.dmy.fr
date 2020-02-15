@@ -61,6 +61,17 @@ pre {
 .page {
   display: flex;
   flex: 1;
+  margin-left: calc(100vw - 100%);
+}
+
+.page::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 64px;
+  width: calc(100vw - 100%);
+  background-color: #5FABDC;
+  content: "";
 }
 
 .page-margin {
@@ -439,6 +450,14 @@ Not really any of those on the website though AFAIK.
     flex-wrap: wrap-reverse;
     box-sizing: border-box;
     margin: 0;
+  }
+
+  .page {
+    margin-left: 0;
+  }
+
+  .page::before {
+    display: none;
   }
 
   .page-margin {
