@@ -81,8 +81,8 @@ type DocsError
 -- INIT
 
 
-init : Session.Data -> String -> String -> Maybe V.Version -> Focus -> ( Model, Cmd Msg )
-init session author project version focus =
+init : Session.Data -> String -> String -> Maybe V.Version -> Focus -> Maybe String -> ( Model, Cmd Msg )
+init session author project version focus query =
   let
     model =
       { session = session
@@ -90,7 +90,7 @@ init session author project version focus =
       , project = project
       , version = version
       , focus = focus
-      , query = ""
+      , query = Maybe.withDefault "" query
       , latest = Loading
       , readme = Loading
       , docs = Loading
@@ -652,7 +652,7 @@ viewModuleLink : Model -> String -> Html msg
 viewModuleLink model name =
   let
     url =
-      Href.toModule model.author model.project model.version name Nothing
+      Href.toModuleWithQuery model.author model.project model.version name Nothing model.query
   in
   navModuleLink name url <|
     case model.focus of
@@ -667,10 +667,10 @@ viewModuleLink model name =
 
 
 viewValueItem : Model -> String -> String -> String -> Html msg
-viewValueItem { author, project, version } moduleName ownerName valueName =
+viewValueItem { author, project, version, query } moduleName ownerName valueName =
   let
     url =
-      Href.toModule author project version moduleName (Just ownerName)
+      Href.toModuleWithQuery author project version moduleName (Just ownerName) query
   in
   li [ class "pkg-nav-value" ] [ navModuleLink valueName url False ]
 

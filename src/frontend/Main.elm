@@ -300,13 +300,13 @@ stepUrl url model =
             (\author project ->
                 stepDiff model (Diff.init session author project)
             )
-        , route (s "packages" </> author_ </> project_ </> version_ </> focus_ <?> source_)
-            (\author project version focus source ->
+        , route (s "packages" </> author_ </> project_ </> version_ </> focus_ <?> source_ <?> Query.string "q")
+            (\author project version focus source query ->
                 case (focus, source) of
                   (Docs.Module moduleName tag, Just _) ->
                    let
                      (newModel, cmd) =
-                       stepDocs model (Docs.init session author project version (Docs.Module moduleName tag))
+                       stepDocs model (Docs.init session author project version focus query)
                    in
                      ( newModel
                      , Cmd.batch
@@ -316,7 +316,7 @@ stepUrl url model =
                      )
 
                   _ ->
-                    stepDocs model (Docs.init session author project version focus)
+                    stepDocs model (Docs.init session author project version focus query)
             )
         , route (s "help" </> s "design-guidelines")
             (stepHelp model (Help.init session "Design Guidelines" "/assets/help/design-guidelines.md"))

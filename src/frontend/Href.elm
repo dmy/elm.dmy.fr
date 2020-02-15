@@ -5,6 +5,7 @@ module Href exposing
   , toAbout
   , toModule
   , toModuleWithSource
+  , toModuleWithQuery
   )
 
 
@@ -39,7 +40,20 @@ toAbout author project version =
 toModule : String -> String -> Maybe V.Version -> String -> Maybe String -> String
 toModule author project version moduleName maybeValue =
   Url.custom Url.Absolute
-    [ "packages" , author , project , vsnToString version , String.replace "." "-" moduleName ] [] maybeValue
+    [ "packages", author, project, vsnToString version, String.replace "." "-" moduleName ] [] maybeValue
+
+
+toModuleWithQuery : String -> String -> Maybe V.Version -> String -> Maybe String -> String -> String
+toModuleWithQuery author project version moduleName maybeValue query =
+  Url.custom Url.Absolute
+    [ "packages"
+    , author
+    , project
+    , vsnToString version
+    , String.replace "." "-" moduleName
+    ]
+    (if String.isEmpty query then [] else [ Url.string "q" query ])
+    maybeValue
 
 
 toModuleWithSource : String -> String -> Maybe V.Version -> String -> Maybe String -> String
