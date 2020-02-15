@@ -1,63 +1,75 @@
 html,
 head,
 body {
-  background-color: black;
+  background-color: #121212;
 }
 
 body {
-  color: #d6c3b4;
+  color: #e5e5e5;
 }
 
 .logo-text {
-  color: black !important;
-}
-
-.header-bar svg {
-  fill: black;
+  color: #e5e5e5;
 }
 
 .header {
-  color: black;
+  background-color: black;
+  color: #e5e5e5;
 }
 
-.header>a {
-  color: black;
+.header-bar {
+  background-color: black;
+}
+
+.header-bar .center {
+  background-color: black;
+}
+
+.page::before {
+  background-color: black;
+}
+
+.page-margin {
+  background-color: black;
+}
+
+.header-bar svg {
+  fill: #5fabdc;
+}
+
+.header {
+  color: #e5e5e5;
+}
+
+.header > a {
+  color: #e5e5e5;
 }
 
 pre {
-  background-color: black;
+  background-color: #121212;
   border-color: #222222;
 }
 
 input {
   background-color: black;
-  border-color: #222222 !important;
+  border: 0 !important;
   color: #d6c3b4;
 }
 
 input::placeholder {
-  color: #888888;
+  color: #a6a6a6;
 }
 
 a {
-  color: #5FABDC;
+  color: #81d4fa;
 }
 
 a .pkg-summary-author {
-  color: #1293d8;
-}
-
-.footer {
-  color: #444444;
-  border-color: #333333;
-}
-
-.grey-link {
-  color: #444444;
+  color: #5fabdc;
 }
 
 .pkg-summary {
-  border-color: #333333;
+  border-color: #424242;
 }
 
 .pkg-hint {
@@ -65,7 +77,7 @@ a .pkg-summary-author {
 }
 
 .catalog-sidebar {
-  border-color: #333333;
+  border-color: #424242;
 }
 
 .version-warning {
@@ -77,15 +89,15 @@ a .pkg-summary-author {
 }
 
 .pkg-nav {
-  border-color: #333333;
+  border-color: #424242;
 }
 
 .pkg-nav ul.pkg-nav-modules {
-  border-color: #333333;
+  border-color: #424242;
 }
 
 .docs-block {
-  border-color: #333333;
+  border-color: #424242;
 }
 
 :not(pre)>code {

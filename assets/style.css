@@ -33,16 +33,11 @@ a {
 }
 
 a:hover {
-  color: rgb(234, 21, 122);
   text-decoration: underline;
 }
 
 a .pkg-summary-author {
   color: #5FABDC;
-}
-
-a:hover .pkg-summary-author {
-  color: rgb(234, 21, 122);
 }
 
 pre {
@@ -101,6 +96,10 @@ pre {
   background-color: #5FABDC;
   display: flex;
   align-items: center;
+}
+
+.header-bar svg {
+  fill: white;
 }
 
 .header-bar .center {

@@ -193,7 +193,6 @@ viewLogo =
         [ Logo.logo 30
         , div
             [ class "logo-text"
-            , style "color" "white"
             , style "padding-left" "8px"
             ]
             [ div

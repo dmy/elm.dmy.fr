@@ -19,7 +19,6 @@ logo n =
     [ width size
     , height size
     , viewBox "0 0 600 600"
-    , fill "white"
     ]
     [ shape "0,20 280,300 0,580"
     , shape "20,600 300,320 580,600"
