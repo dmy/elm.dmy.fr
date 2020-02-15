@@ -337,7 +337,8 @@ pre {
 
 
 .pkg-hint {
-  padding: 20px;
+  margin: 20px -10px;
+  padding: 20px 10px;
   background-color: #fcfcfc;
   border-radius: 8px;
 }
@@ -605,6 +606,11 @@ Not really any of those on the website though AFAIK.
 
   .pkg-nav-modules li:not(:last-child) {
     margin-right: 20px;
+  }
+
+  .pkg-hint {
+    margin: 20px -5px;
+    padding: 10px 5px;
   }
 
 }
