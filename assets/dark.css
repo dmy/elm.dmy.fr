@@ -80,6 +80,10 @@ a .pkg-summary-author {
   border-color: #333333;
 }
 
+.pkg-nav ul.pkg-nav-modules {
+  border-color: #333333;
+}
+
 .docs-block {
   border-color: #333333;
 }
