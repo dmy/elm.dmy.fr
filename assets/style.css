@@ -516,6 +516,10 @@ Not really any of those on the website though AFAIK.
     align-items: stretch;
   }
 
+  .block-list a {
+    word-break: break-word;
+  }
+
   .pkg-summary h1 {
     flex: 1;
     overflow-wrap: anywhere;
@@ -563,6 +567,12 @@ Not really any of those on the website though AFAIK.
 
     max-height: initial;
     overflow: visible;
+  }
+
+  .pkg-nav ul.pkg-nav-modules {
+    border: 0;
+    max-width: calc(100vw - 20px);
+    overflow-x: scroll;
   }
 
   .pkg-nav h2 {
