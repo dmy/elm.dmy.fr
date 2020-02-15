@@ -527,7 +527,8 @@ viewSidebarModules model =
             -- String.trim allows to display all items with a space
             String.toLower (String.trim model.query)
         in
-        ul [] (List.filterMap (viewSearchItem model query) modules)
+        ul [ class "pkg-nav-modules" ]
+          (List.filterMap (viewSearchItem model query) modules)
 
 
 viewSearchItem : Model -> String -> Docs.Module -> Maybe (Html msg)

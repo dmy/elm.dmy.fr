@@ -234,25 +234,31 @@ pre {
 
 
 .pkg-nav {
-  top: 0px;
   vertical-align: top;
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 0 30px;
   margin: 20px 20px 20px 40px;
   border-left: 1px solid #eeeeee;
   line-height: 1.5em;
 
   position: sticky;
-  max-height: calc(100vh - 108px);
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  top: 0px;
+  overflow-x: visible;
+  width: 140px;
 }
 
 .pkg-nav ul.pkg-nav-modules {
-  margin-bottom: 20px;
+  border-left: 1px solid #eeeeee;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  transform: translateX(-31px);
+  position: absolute;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  max-height: calc(100vh - 308px);
 }
 
-.pkg-nav::-webkit-scrollbar {
+.pkg-nav ul.pkg-nav-modules::-webkit-scrollbar {
   display: none;
 }
 
@@ -585,9 +591,12 @@ Not really any of those on the website though AFAIK.
     margin-right: 10px;
   }
 
-  .pkg-nav-modules {
+  .pkg-nav ul.pkg-nav-modules {
     display: flex;
     flex-wrap: wrap;
+    padding: 0;
+    position: static;
+    transform: none;
   }
 
   .pkg-nav-modules li {
