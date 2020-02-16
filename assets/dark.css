@@ -53,7 +53,7 @@ pre {
 input {
   background-color: black;
   border: 0 !important;
-  color: #d6c3b4;
+  color: #e5e5e5;
 }
 
 input::placeholder {
