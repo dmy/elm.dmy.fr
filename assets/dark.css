@@ -51,13 +51,13 @@ pre {
 }
 
 input {
-  background-color: black;
+  background-color: #424242;
   border: 0 !important;
   color: #e5e5e5;
 }
 
 input::placeholder {
-  color: #a6a6a6;
+  color: #e5e5e5;
 }
 
 a {
@@ -73,7 +73,7 @@ a .pkg-summary-author {
 }
 
 .pkg-hint {
-  background-color: black;
+  background-color: #424242;
 }
 
 .catalog-sidebar {
