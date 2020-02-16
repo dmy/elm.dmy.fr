@@ -204,7 +204,9 @@ viewSearch query author entries =
         Success es ->
           let
             results =
-              List.map viewEntry (Entry.search query author es)
+              Entry.search query author es
+                |> List.take 300
+                |> List.map viewEntry
           in
           div []
             [ Keyed.node "div" [] <|
