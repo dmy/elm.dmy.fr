@@ -244,7 +244,7 @@ pre {
   width: 140px;
 }
 
-.pkg-nav ul.pkg-nav-modules {
+#pkg-nav-modules {
   border-left: 1px solid #eeeeee;
   padding-left: 30px;
   padding-bottom: 20px;
@@ -256,7 +256,7 @@ pre {
   max-height: calc(100vh - 308px);
 }
 
-.pkg-nav ul.pkg-nav-modules::-webkit-scrollbar {
+#pkg-nav-modules::-webkit-scrollbar {
   display: none;
 }
 
@@ -285,7 +285,7 @@ pre {
   padding-left: 20px;
 }
 
-.pkg-nav-module {
+#pkg-nav-module {
   font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
   text-overflow: ellipsis;
 }
@@ -568,7 +568,7 @@ Not really any of those on the website though AFAIK.
     overflow: visible;
   }
 
-  .pkg-nav ul.pkg-nav-modules {
+  #pkg-nav-modules {
     border: 0;
     max-width: calc(100vw - 20px);
     overflow-x: scroll;
@@ -600,7 +600,7 @@ Not really any of those on the website though AFAIK.
     margin-right: 10px;
   }
 
-  .pkg-nav ul.pkg-nav-modules {
+  #pkg-nav-modules {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
@@ -608,12 +608,12 @@ Not really any of those on the website though AFAIK.
     transform: none;
   }
 
-  .pkg-nav-modules li {
+  #pkg-nav-modules li {
     white-space: nowrap;
     min-width: 150px;
   }
 
-  .pkg-nav-modules li:not(:last-child) {
+  #pkg-nav-modules li:not(:last-child) {
     margin-right: 20px;
   }
 

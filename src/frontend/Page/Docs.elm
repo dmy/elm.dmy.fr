@@ -150,9 +150,9 @@ getInfo latest model =
 scrollIfNeeded : Focus -> Cmd Msg
 scrollIfNeeded focus =
   case focus of
-    Module _ (Just tag) -> scrollToTag tag
+    Module _ (Just tag) -> scrollTo tag
     Module _ Nothing -> scrollToTop
-    Readme (Just tag) -> scrollToTag tag
+    Readme (Just tag) -> scrollTo tag
     Readme Nothing -> scrollToTop
     About -> Cmd.none
 
@@ -162,13 +162,26 @@ scrollToTop =
   Task.attempt ScrollAttempted (Dom.setViewport 0 0)
 
 
-scrollToTag : String -> Cmd Msg
-scrollToTag tag =
+scrollTo : String -> Cmd Msg
+scrollTo elementId =
   Task.attempt ScrollAttempted (
-    Dom.getElement tag
+    Dom.getElement elementId
       |> Task.andThen (\info -> Dom.setViewport 0 info.element.y)
   )
 
+
+scrollViewportTo : String -> String -> Cmd Msg
+scrollViewportTo viewportId elementId =
+  Task.attempt ScrollAttempted (
+    Task.map3 (\_ a b -> (a, b))
+        (Dom.setViewportOf viewportId 0 0)
+        (Dom.getElement viewportId)
+        (Dom.getElement elementId)
+        |> Task.andThen
+            (\(viewport, target) ->
+              Dom.setViewportOf viewportId 0 (target.element.y - viewport.element.y)
+            )
+  )
 
 
 -- UPDATE
@@ -188,7 +201,9 @@ update msg model =
   case msg of
     QueryChanged query ->
       ( { model | query = query }
-      , Cmd.none
+      , case model.focus of
+          Module name _ -> scrollViewportTo "pkg-nav-modules" ("nav-" ++ name)
+          _ -> Cmd.none
       )
 
     ScrollAttempted _ ->
@@ -518,7 +533,7 @@ viewSidebarModules model =
           viewEntry docs =
             li [] [ viewModuleLink model docs.name ]
         in
-        ul [ class "pkg-nav-modules" ]
+        ul [ id "pkg-nav-modules" ]
           (List.map viewEntry modules)
 
       else
@@ -527,7 +542,7 @@ viewSidebarModules model =
             -- String.trim allows to display all items with a space
             String.toLower (String.trim model.query)
         in
-        ul [ class "pkg-nav-modules" ]
+        ul [ id "pkg-nav-modules" ]
           (List.filterMap (viewSearchItem model query) modules)
 
 
@@ -871,4 +886,6 @@ navLinkHelp linkClass name url isBold =
         [ class linkClass
         ]
   in
-  a (href url :: attributes) [ text name ]
+  a
+    (href url :: id ("nav-" ++ name) :: attributes)
+    [ text name ]
