@@ -170,7 +170,7 @@ viewWarning warning =
 viewFooter : Html msg
 viewFooter =
   div [class "footer"]
-    [ a [ class "grey-link", href "https://github.com/elm/package.elm-lang.org/" ] [ text "Elm" ]
+    [ a [ class "grey-link", href "https://github.com/rlefevre/elm.dmy.fr/" ] [ text "Elm" ]
     , text " © 2020"
     ]
 
