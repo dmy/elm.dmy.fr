@@ -46,8 +46,8 @@ body {
 }
 
 pre {
-  background-color: #121212;
-  border-color: #222222;
+  background-color: black;
+  border: 0
 }
 
 input {

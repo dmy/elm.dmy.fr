@@ -211,6 +211,7 @@ pre {
   overflow: hidden;
   display: flex;
   align-items: stretch;
+  flex-direction: column;
 }
 
 .docs-comment div {
