@@ -107,3 +107,7 @@ a .pkg-summary-author {
 .block-list img {
   background-color: white;
 }
+
+.grey-link {
+  color: #424242;
+}
