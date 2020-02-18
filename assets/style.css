@@ -209,12 +209,11 @@ pre {
 .docs-comment {
   overflow: hidden;
   display: flex;
-  align-items: stretch;
-  flex-direction: column;
 }
 
 .docs-comment div {
   min-width: 0;
+  flex: 1;
 }
 
 .docs-comment img {
@@ -542,6 +541,11 @@ Not really any of those on the website though AFAIK.
   .block-list pre {
     box-sizing: border-box;
     width: calc(100vw - 20px);
+  }
+
+  .docs-comment pre {
+    box-sizing: border-box;
+    width: calc(100vw - 20px - 36px);
   }
 
   .spacey-char {
