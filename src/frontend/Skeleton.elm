@@ -171,7 +171,7 @@ viewFooter : Html msg
 viewFooter =
   div [class "footer"]
     [ a
-        [ class "grey-link", href "https://github.com/rlefevre/elm.dmy.fr/" ]
+        [ class "grey-link", href "https://github.com/dmy/elm.dmy.fr/" ]
         [ text "Elm © 2020" ]
     ]
 
