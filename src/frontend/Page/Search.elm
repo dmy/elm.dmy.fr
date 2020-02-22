@@ -10,7 +10,7 @@ module Page.Search exposing
 import Browser.Navigation as Nav
 import Elm.Version as V
 import Html exposing (..)
-import Html.Attributes exposing (autofocus, class, href, name, placeholder, style, type_, value)
+import Html.Attributes exposing (autocomplete, autofocus, class, href, name, placeholder, style, type_, value)
 import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Html.Keyed as Keyed
@@ -191,6 +191,7 @@ viewSearch query author entries =
             , onInput QueryChanged
             , autofocus True
             , name "q"
+            , autocomplete False
             ]
             []
         ]

@@ -22,6 +22,15 @@ h4 {
   font-weight: normal;
 }
 
+input {
+  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
+}
+
+input::placeholder {
+  color: #000e16;
+  opacity: 0.54;
+}
+
 p,
 li {
   line-height: 1.5em;

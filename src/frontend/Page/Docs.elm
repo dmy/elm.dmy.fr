@@ -512,6 +512,7 @@ viewSidebar model =
         , value model.query
         , onInput QueryChanged
         , size 1
+        , autocomplete False
         ]
         []
     , viewSidebarModules model
