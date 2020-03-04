@@ -539,22 +539,22 @@ Not really any of those on the website though AFAIK.
 
   .docs-header {
     box-sizing: border-box;
-    width: calc(100vw - 20px);
+    width: calc(100vw - 40px);
   }
 
   .block-list h1 {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 40px);
     overflow-wrap: break-word;
   }
 
   .block-list pre {
     box-sizing: border-box;
-    width: calc(100vw - 20px);
+    width: calc(100vw - 40px);
   }
 
   .docs-comment pre {
     box-sizing: border-box;
-    width: calc(100vw - 20px - 36px);
+    width: calc(100vw - 40px - 36px);
   }
 
   .spacey-char {
