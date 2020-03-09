@@ -279,7 +279,7 @@ viewSidebar =
         ]
     , h2 [] [ text "Resources" ]
     , ul []
-        [ li [] [ a [ href "https://klaftertief.github.io/elm-search/" ] [ text "Fancy Search" ] ]
+        [ li [] [ a [ href "https://klaftertief.github.io/elm-search/" ] [ text "Search by Type" ] ]
         , li [] [ a [ href "https://guide.elm-lang.org/install/elm.html#elm-install" ] [ text "Using Packages" ] ]
         , li [] [ a [ href "/help/design-guidelines" ] [ text "API Design Guidelines" ] ]
         , li [] [ a [ href "/help/documentation-format" ] [ text "Write great docs" ] ]
