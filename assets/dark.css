@@ -105,7 +105,7 @@ a .pkg-summary-author {
 }
 
 .block-list img {
-  background-color: white;
+  filter: invert();
 }
 
 .grey-link {
