@@ -36,7 +36,6 @@ type alias Model =
   , query : String
   , author : Maybe String
   , entries : Entries
-  , debounce : Debounce
   }
 
 
@@ -46,23 +45,17 @@ type Entries
   | Success (List Entry)
 
 
-type Debounce
-  = Idle
-  | RunNow
-  | Postpone
-
-
 
 init : Session.Data -> Maybe String -> Maybe String -> ( Model, Cmd Msg )
 init session query author =
   case Session.getEntries session of
     Just entries ->
-      ( Model session (Maybe.withDefault "" query) author (Success entries) Idle
+      ( Model session (Maybe.withDefault "" query) author (Success entries)
       , Cmd.none
       )
 
     Nothing ->
-      ( Model session (Maybe.withDefault "" query) author Loading Idle
+      ( Model session (Maybe.withDefault "" query) author Loading
       , Http.send GotPackages <|
           Http.get "/search.json" (Decode.list Entry.decoder)
       )
@@ -76,14 +69,17 @@ type Msg
   = QueryChanged String
   | QuerySubmitted
   | GotPackages (Result Http.Error (List Entry))
-  | DebounceDelayElapsed
+  | DelayedUrlChange String
 
 
 update : Nav.Key -> Msg -> Model -> ( Model, Cmd Msg )
 update key msg model =
   case msg of
     QueryChanged query ->
-      debounce { model | query = query }
+      ( { model | query = query }
+      , Process.sleep 300
+          |> Task.perform (\_ -> DelayedUrlChange query)
+      )
 
     GotPackages result ->
       case result of
@@ -100,38 +96,18 @@ update key msg model =
           , Cmd.none
           )
 
-    DebounceDelayElapsed ->
-      if model.debounce == Postpone then
-        debounce { model | debounce = Idle }
+    DelayedUrlChange query ->
+      if query == model.query then
+        ( model, addQueryToUrl key model )
       else
-        ( { model | debounce = Idle }
-        , addQueryToUrl key model
-        )
+        -- Input changed, do nothing
+        ( model, Cmd.none )
 
     QuerySubmitted ->
       if String.contains "->" model.query then
-        (model, searchByType model.query)
+        ( model, searchByType model.query )
       else
-        (model, Cmd.none)
-
-
-debounce : Model -> (Model, Cmd Msg)
-debounce model =
-  case model.debounce of
-    Idle ->
-      ( { model | debounce = RunNow }
-      , Task.perform (\_ -> DebounceDelayElapsed) (Process.sleep 200)
-      )
-
-    RunNow ->
-      ( { model | debounce = Postpone }
-      , Cmd.none
-      )
-
-    Postpone ->
-      ( { model | debounce = Postpone }
-      , Cmd.none
-      )
+        ( model, Cmd.none )
 
 
 searchByType : String -> Cmd msg
