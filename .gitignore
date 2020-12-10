@@ -1,4 +1,5 @@
 cabal.sandbox.config
+elm.js
 dist
 log
 elm-stuff
